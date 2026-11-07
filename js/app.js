@@ -13,6 +13,8 @@
   const detailSearch = $('#detailSearch');
   const backdrop = $('#backdrop');
   const toastEl = $('#toast');
+  const themeMeta = $('meta[name="theme-color"]');
+  const setTheme = (color) => { if (themeMeta) themeMeta.setAttribute('content', color); };
 
   let detailOpen = false;
   let activeSheet = null;
@@ -53,6 +55,7 @@
     detail.classList.add('open');
     detail.setAttribute('aria-hidden', 'false');
     detailScroll.scrollTop = 0;
+    setTheme('#0a0a0b');
     R.renderDetail();
     if (focusSearch) setTimeout(() => detailSearch.focus({ preventScroll: true }), 470);
   }
@@ -61,6 +64,7 @@
     phone.classList.remove('detail-open');
     detail.classList.remove('open');
     detail.setAttribute('aria-hidden', 'true');
+    setTheme('#2b45ff');
     if (detailSearch.value) {
       detailSearch.value = '';
       R.renderDetail();
