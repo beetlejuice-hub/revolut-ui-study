@@ -462,8 +462,8 @@
 
   /* ============ installable web app ============ */
   if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    });
+    const registerSW = () => navigator.serviceWorker.register('./sw.js').catch(() => {});
+    if (document.readyState === 'complete') registerSW();
+    else window.addEventListener('load', registerSW, { once: true });
   }
 })();
