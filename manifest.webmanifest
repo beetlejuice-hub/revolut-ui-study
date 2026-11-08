@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Revolut UI Study",
-  "short_name": "Revolut Demo",
+  "name": "Revolut",
+  "short_name": "Revolut",
   "description": "An educational, interactive Revolut-style UI demo.",
   "lang": "en",
   "start_url": "./",

@@ -2,7 +2,7 @@
 
 A high-fidelity, front-end recreation of the Revolut home screen and transaction list, built for an educational presentation. It is a static HTML/CSS/JS demo — no build step, no dependencies, no real banking.
 
-> Not affiliated with Revolut. Revolut and its marks belong to Revolut Ltd. This is a non-commercial design study; all merchant marks are placeholder approximations.
+> Not affiliated with Revolut. Revolut and its marks belong to Revolut Ltd. This is a non-commercial design study. Merchant logos are used only to identify the merchants shown in the reference screenshots; all trademarks belong to their owners.
 
 ## Run it
 
@@ -30,7 +30,7 @@ It opens full-screen with no browser chrome, works offline after the first load,
 **Home**
 - Blue gradient hero with `Personal · RON`, balance, IBAN and Accounts pill.
 - Add money / Move / Details / More quick actions.
-- Auto-playing promo carousel with dots, swipe, and dismissible cards.
+- Swipeable promo carousel with dots and dismissible cards.
 - Upcoming payment, transaction list and a dismissible "Competitive loans." offer.
 - Floating blurred tab bar (Home, Credit, Invest, Payments, Crypto, RevPoints).
 - Scroll animation: the hero fades and collapses as the top bar becomes solid, then the list scrolls underneath.
@@ -38,6 +38,7 @@ It opens full-screen with no browser chrome, works offline after the first load,
 **Transactions screen** (tap `See all`, `Search`, `Accounts`, `Details`, or the analytics icon)
 - Black "Current balance" layout from the second reference image.
 - Upcoming card, Today / Yesterday groups with computed totals.
+- Date labels are relative to the real current date: the reference payments are anchored to 7 November 2026, so they read "Yesterday" on the 8th and "Nov 7" from the 9th onward.
 - Live search filtering.
 - Tap any row for a transaction detail sheet (category, account, status, actions).
 

@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Revolut Demo">
+<meta name="apple-mobile-web-app-title" content="Revolut">
 <title>Revolut — UI study</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232b45ff'/%3E%3Cpath d='M20.9 6.96C20.9 3.12 17.8 0 13.95 0H2.42v3.86h10.98c1.74 0 3.18 1.37 3.21 3.04.02.84-.3 1.63-.89 2.23-.59.6-1.37.93-2.21.93H9.23a.28.28 0 0 0-.28.28v3.43c0 .06.02.11.05.16L16.26 24h5.32l-7.28-10.09c3.66-.19 6.6-3.27 6.6-6.95zM6.89 5.92H2.42V24h4.47z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23fff'/%3E%3Cg transform='translate(3.75 3.75) scale(.69)' fill='%230a0a0b'%3E%3Cpath d='M20.9133 6.9566C20.9133 3.1208 17.7898 0 13.9503 0H2.424v3.8605h10.9782c1.7376 0 3.177 1.3651 3.2087 3.043.016.84-.2994 1.633-.8878 2.2324-.5886.5998-1.375.9303-2.2144.9303H9.2322a.2756.2756 0 0 0-.2755.2752v3.431c0 .0585.018.1142.052.1612L16.2646 24h5.3114l-7.2727-10.094c3.6625-.1838 6.61-3.2612 6.61-6.9494zM6.8943 5.9229H2.424V24h4.4704z'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="css/fonts.css">
@@ -22,6 +22,29 @@
 
 <div class="stage">
   <div class="phone" id="phone">
+
+    <!-- ============ LAUNCH / FACE ID SCREEN ============ -->
+    <div class="lock" id="lockScreen" aria-hidden="false">
+      <div class="lock-glow"></div>
+      <div class="statusbar lock-status">
+        <span class="js-time">1:52</span>
+        <span class="sicons">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.6" width="3" height="6.4" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="17" height="13" viewBox="0 0 17 13" fill="none" aria-hidden="true"><path d="M1.2 4.3C3.3 2.3 5.8 1.2 8.5 1.2s5.2 1.1 7.3 3.1" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M3.7 7c1.4-1.3 3-2 4.8-2s3.4.7 4.8 2" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M6.3 9.7c.7-.6 1.4-.9 2.2-.9.8 0 1.5.3 2.2.9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><circle cx="8.5" cy="11.6" r="1.15" fill="#fff"/></svg>
+          <span class="batt"><span class="batt-num">18</span></span>
+        </span>
+      </div>
+      <div class="lock-body">
+        <div class="lock-avatar" id="lockAvatar">AL</div>
+        <h1>Nice to see you again, <span id="lockName">Arnold</span></h1>
+      </div>
+      <button class="lock-faceid" id="lockFace" aria-label="Unlock with Face ID">
+        <span class="faceid-check">
+          <svg viewBox="0 0 64 64" width="46" height="46" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="24"/><path d="m21 32 8 8 15-16"/></svg>
+        </span>
+        <span class="faceid-label">Face ID</span>
+      </button>
+    </div>
 
     <!-- ============ HOME LAYER ============ -->
     <div class="home-layer" id="homeLayer">
@@ -36,7 +59,7 @@
               <span class="int">0</span><span class="dec">,00</span><span class="cur">lei</span>
             </div>
             <button class="iban" id="ibanBtn" title="Copy IBAN">
-              <svg class="iban-ic" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.4 12 4l9 5.4"/><path d="M4.6 9.4h14.8"/><path d="M6.2 19v-6.4M10.1 19v-6.4M13.9 19v-6.4M17.8 19v-6.4"/><path d="M4.2 19h15.6"/></svg>
+              <svg class="iban-ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.4 12 4l9 5.4"/><path d="M4.6 9.4h14.8"/><path d="M6.2 19v-6.4M10.1 19v-6.4M13.9 19v-6.4M17.8 19v-6.4"/><path d="M4.2 19h15.6"/></svg>
               <span id="ibanText">RO09 REVO 0000 1112 7043 6279</span>
             </button>
             <button class="accounts-pill" id="accountsBtn">Accounts</button>
@@ -45,19 +68,19 @@
 
         <section class="actions" aria-label="Quick actions">
           <button class="action" data-action="add">
-            <span class="action-ic"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 4.8v14.4M4.8 12h14.4"/></svg></span>
+            <span class="action-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 4.8v14.4M4.8 12h14.4"/></svg></span>
             <span>Add money</span>
           </button>
           <button class="action" data-action="move">
-            <span class="action-ic"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.2h3.9c1.3 0 2.4.6 3.1 1.7l3 4.5c.7 1 1.8 1.7 3.1 1.7h3.4"/><path d="m17.2 11.6 3.3 3.5-3.3 3.5"/><path d="M3.5 17.1h3.9c1.3 0 2.4-.6 3.1-1.7l.9-1.3"/><path d="M14.6 8.2c.7-1 1.8-1.7 3.1-1.7h2.7"/><path d="m17.2 3.2 3.3 3.3-3.3 3.3"/></svg></span>
+            <span class="action-ic"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.2h3.9c1.3 0 2.4.6 3.1 1.7l3 4.5c.7 1 1.8 1.7 3.1 1.7h3.4"/><path d="m17.2 11.6 3.3 3.5-3.3 3.5"/><path d="M3.5 17.1h3.9c1.3 0 2.4-.6 3.1-1.7l.9-1.3"/><path d="M14.6 8.2c.7-1 1.8-1.7 3.1-1.7h2.7"/><path d="m17.2 3.2 3.3 3.3-3.3 3.3"/></svg></span>
             <span>Move</span>
           </button>
           <button class="action" data-action="details">
-            <span class="action-ic"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 9.2 12 4l8.8 5.2"/><path d="M4.9 9.2h14.2"/><path d="M6.6 19.2v-6.6M10.4 19.2v-6.6M13.6 19.2v-6.6M17.4 19.2v-6.6"/><path d="M4.4 19.2h15.2"/></svg></span>
+            <span class="action-ic"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 9.2 12 4l8.8 5.2"/><path d="M4.9 9.2h14.2"/><path d="M6.6 19.2v-6.6M10.4 19.2v-6.6M13.6 19.2v-6.6M17.4 19.2v-6.6"/><path d="M4.4 19.2h15.2"/></svg></span>
             <span>Details</span>
           </button>
           <button class="action" data-action="more">
-            <span class="action-ic"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></span>
+            <span class="action-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></span>
             <span>More</span>
           </button>
         </section>
@@ -73,25 +96,67 @@
           <button class="seeall" id="seeAll">See all</button>
         </section>
 
-        <section class="offer" id="offerCard">
-          <button class="offer-x" id="offerX" aria-label="Dismiss">×</button>
-          <div class="offer-glow"></div>
-          <div class="offer-body">
-            <h3>Competitive loans.</h3>
-            <p>Borrow from 5.9% APR</p>
+        <!-- ============ LOANS ============ -->
+        <section class="loans" id="loansCard">
+          <img class="loans-img" src="img/loans.jpg" alt="">
+          <div class="loans-shade"></div>
+          <button class="loans-x" id="loansClose" aria-label="Dismiss">×</button>
+          <div class="loans-body">
+            <h3>Competitive loans,<br>flexible repayments</h3>
+            <p>Apply in minutes. T&amp;Cs apply</p>
           </div>
-          <button class="offer-cta" id="offerCta">See more</button>
+          <button class="loans-cta" id="loansCta">
+            <span class="loans-cta-ic">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><circle cx="9.5" cy="8" r="3.4"/><path d="M3.4 19c0-3.4 2.7-6.1 6.1-6.1 1 0 1.9.2 2.7.6l-1.6 1.6c-.35-.1-.72-.15-1.1-.15A4.05 4.05 0 0 0 5.4 19z"/><circle cx="17.4" cy="16.4" r="4.3"/><path d="m15.5 16.4 1.35 1.35 2.5-2.7" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="loans-cta-txt">Check your eligibility</span>
+            <span class="loans-cta-chev">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>
+            </span>
+          </button>
+        </section>
+
+        <!-- ============ CARDS ============ -->
+        <section class="sec-card cards-sec" id="cardsSec">
+          <button class="sec-card-head" id="cardsSeeAll">
+            <span>Cards</span>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>
+          </button>
+          <div class="cards-row" id="cardsRow"></div>
+        </section>
+
+        <!-- ============ TOTAL WEALTH ============ -->
+        <section class="sec-card wealth-sec" id="wealthSec">
+          <button class="sec-card-head" id="wealthHead">
+            <span>Total wealth</span>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>
+          </button>
+          <div class="wealth-total" id="wealthTotal">73 lei</div>
+          <div class="wealth-rows" id="wealthRows"></div>
+        </section>
+
+        <!-- ============ SPENT THIS MONTH ============ -->
+        <section class="sec-card spent-sec" id="spentSec">
+          <button class="sec-card-head" id="spentSeeAll">
+            <span>Spent this month</span>
+          </button>
+          <div class="spent-top">
+            <span class="spent-total" id="spentTotal">336 lei</span>
+            <span class="spent-delta" id="spentDelta"></span>
+            <span class="spent-limit" id="spentLimit">2,17k lei</span>
+          </div>
+          <div class="spent-chart" id="spentChart" aria-hidden="true"></div>
         </section>
 
         <div class="home-pad"></div>
       </main>
 
       <div class="statusbar">
-        <span class="js-time">23:27</span>
+        <span class="js-time">1:52</span>
         <span class="sicons">
           <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.6" width="3" height="6.4" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
           <svg width="17" height="13" viewBox="0 0 17 13" fill="none" aria-hidden="true"><path d="M1.2 4.3C3.3 2.3 5.8 1.2 8.5 1.2s5.2 1.1 7.3 3.1" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M3.7 7c1.4-1.3 3-2 4.8-2s3.4.7 4.8 2" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M6.3 9.7c.7-.6 1.4-.9 2.2-.9.8 0 1.5.3 2.2.9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><circle cx="8.5" cy="11.6" r="1.15" fill="#fff"/></svg>
-          <span class="batt"><span class="batt-num">40</span></span>
+          <span class="batt"><span class="batt-num">18</span></span>
         </span>
       </div>
 
@@ -101,32 +166,32 @@
           <span class="dot"></span>
         </button>
         <button class="searchpill" id="searchHome">
-          <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.4 4.4"/></svg>
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.4 4.4"/></svg>
           <span>Search</span>
         </button>
-        <button class="iconbtn" id="statsBtn" aria-label="Analytics">
-          <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor"><rect x="3.2" y="12.2" width="4.4" height="8.6" rx="2.2"/><rect x="9.8" y="6.2" width="4.4" height="14.6" rx="2.2"/><rect x="16.4" y="9.4" width="4.4" height="11.4" rx="2.2"/></svg>
+        <button class="iconbtn" id="statsBtn" aria-label="Spending analytics">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor"><rect x="3.2" y="12.2" width="4.4" height="8.6" rx="2.2"/><rect x="9.8" y="6.2" width="4.4" height="14.6" rx="2.2"/><rect x="16.4" y="9.4" width="4.4" height="11.4" rx="2.2"/></svg>
         </button>
         <button class="iconbtn" id="cardBtn" aria-label="Cards">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2.4" y="5" width="19.2" height="14" rx="4.2"/><path d="M2.8 10.2h18.4"/></svg>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2.4" y="5" width="19.2" height="14" rx="4.2"/><path d="M2.8 10.2h18.4"/></svg>
         </button>
       </header>
 
       <nav class="tabbar" id="tabbar" aria-label="Primary">
         <button class="tab active" data-tab="Home">
-          <span class="tab-ic"><svg viewBox="0 0 24 24" width="23" height="23" fill="currentColor" aria-hidden="true"><path d="M20.9133 6.9566C20.9133 3.1208 17.7898 0 13.9503 0H2.424v3.8605h10.9782c1.7376 0 3.177 1.3651 3.2087 3.043.016.84-.2994 1.633-.8878 2.2324-.5886.5998-1.375.9303-2.2144.9303H9.2322a.2756.2756 0 0 0-.2755.2752v3.431c0 .0585.018.1142.052.1612L16.2646 24h5.3114l-7.2727-10.094c3.6625-.1838 6.61-3.2612 6.61-6.9494zM6.8943 5.9229H2.424V24h4.4704z"/></svg></span>
+          <span class="tab-ic"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#fff"/><g transform="translate(3.75 3.75) scale(.69)" fill="#0a0a0b"><path d="M20.9133 6.9566C20.9133 3.1208 17.7898 0 13.9503 0H2.424v3.8605h10.9782c1.7376 0 3.177 1.3651 3.2087 3.043.016.84-.2994 1.633-.8878 2.2324-.5886.5998-1.375.9303-2.2144.9303H9.2322a.2756.2756 0 0 0-.2755.2752v3.431c0 .0585.018.1142.052.1612L16.2646 24h5.3114l-7.2727-10.094c3.6625-.1838 6.61-3.2612 6.61-6.9494zM6.8943 5.9229H2.424V24h4.4704z"/></g></svg></span>
           <span>Home</span>
         </button>
         <button class="tab" data-tab="Credit">
-          <span class="tab-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="12" cy="6.6" rx="6.9" ry="2.8"/><path d="M5.1 6.6v5.1c0 1.5 3.1 2.8 6.9 2.8s6.9-1.3 6.9-2.8V6.6"/><path d="M5.1 11.7v5.1c0 1.5 3.1 2.8 6.9 2.8s6.9-1.3 6.9-2.8v-5.1"/></svg></span>
+          <span class="tab-ic"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="12" cy="6.6" rx="6.9" ry="2.8"/><path d="M5.1 6.6v5.1c0 1.5 3.1 2.8 6.9 2.8s6.9-1.3 6.9-2.8V6.6"/><path d="M5.1 11.7v5.1c0 1.5 3.1 2.8 6.9 2.8s6.9-1.3 6.9-2.8v-5.1"/></svg></span>
           <span>Credit</span>
         </button>
         <button class="tab" data-tab="Invest">
-          <span class="tab-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9.5M9.3 19V5.5M14.7 19v-7M20 19V8"/></svg></span>
+          <span class="tab-ic"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9.5M9.3 19V5.5M14.7 19v-7M20 19V8"/></svg></span>
           <span>Invest</span>
         </button>
         <button class="tab" data-tab="Payments">
-          <span class="tab-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 8.3h14.2"/><path d="m14.9 5.1 3.2 3.2-3.2 3.2"/><path d="M20.4 15.7H6.2"/><path d="m9.1 12.5-3.2 3.2 3.2 3.2"/></svg><span class="nav-dot"></span></span>
+          <span class="tab-ic"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 8.3h14.2"/><path d="m14.9 5.1 3.2 3.2-3.2 3.2"/><path d="M20.4 15.7H6.2"/><path d="m9.1 12.5-3.2 3.2 3.2 3.2"/></svg><span class="nav-dot"></span></span>
           <span>Payments</span>
         </button>
         <button class="tab" data-tab="Crypto">
@@ -134,39 +199,36 @@
           <span>Crypto</span>
         </button>
         <button class="tab" data-tab="RevPoints">
-          <span class="tab-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 2.7 20 7.2v9.6l-8 4.5-8-4.5V7.2z"/><path d="m12 7.4 1.35 2.95L16.4 11.7l-3.05 1.35L12 16.1l-1.35-3.05L7.6 11.7l3.05-1.35z" fill="currentColor" stroke="none"/></svg></span>
+          <span class="tab-ic"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 2.7 20 7.2v9.6l-8 4.5-8-4.5V7.2z"/><path d="m12 7.4 1.35 2.95L16.4 11.7l-3.05 1.35L12 16.1l-1.35-3.05L7.6 11.7l3.05-1.35z" fill="currentColor" stroke="none"/></svg></span>
           <span>RevPoints</span>
         </button>
       </nav>
     </div>
 
-    <!-- ============ DETAIL SCREEN ============ -->
+    <!-- ============ SPENDING HISTORY ============ -->
     <section class="detail" id="detailScreen" aria-hidden="true">
       <div class="statusbar detail-status">
-        <span class="js-time">23:27</span>
+        <span class="js-time">1:52</span>
         <span class="sicons">
           <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.6" width="3" height="6.4" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
           <svg width="17" height="13" viewBox="0 0 17 13" fill="none" aria-hidden="true"><path d="M1.2 4.3C3.3 2.3 5.8 1.2 8.5 1.2s5.2 1.1 7.3 3.1" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M3.7 7c1.4-1.3 3-2 4.8-2s3.4.7 4.8 2" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><path d="M6.3 9.7c.7-.6 1.4-.9 2.2-.9.8 0 1.5.3 2.2.9" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><circle cx="8.5" cy="11.6" r="1.15" fill="#fff"/></svg>
-          <span class="batt"><span class="batt-num">41</span></span>
+          <span class="batt"><span class="batt-num">18</span></span>
         </span>
       </div>
 
       <div class="detail-scroll" id="detailScroll">
-        <header class="detail-head">
-          <button class="backbtn" id="backBtn" aria-label="Back">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
-          </button>
-          <div class="detail-balance" id="detailBalance"><span class="int">0</span><span class="dec">,00</span><span class="cur">lei</span></div>
-          <div class="detail-label">Current balance</div>
-          <div class="detail-searchrow">
-            <label class="dsearch">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.4 4.4"/></svg>
-              <input id="detailSearch" placeholder="Search" autocomplete="off" spellcheck="false" aria-label="Search transactions">
-            </label>
-            <button class="filterbtn" id="filterBtn" aria-label="Filters">
-              <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M4 7h16M7 12h10M10 17h4"/></svg>
+        <header class="detail-head" id="detailHead">
+          <div class="detail-toprow">
+            <button class="backbtn" id="backBtn" aria-label="Back">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
             </button>
+            <div class="detail-mini-balance" id="detailMiniBalance">0,00 lei</div>
           </div>
+          <div class="detail-balance-wrap" id="detailBalWrap">
+            <div class="detail-balance" id="detailBalance"><span class="int">0</span><span class="dec">,00</span><span class="cur">lei</span></div>
+            <div class="detail-date" id="detailDate">Yesterday</div>
+          </div>
+          <div class="month-pills" id="monthPills"></div>
         </header>
         <div id="detailBody"></div>
         <div class="dpad"></div>
@@ -184,6 +246,7 @@
       </div>
       <div class="sheet-body">
         <p class="sheet-hint">Everything updates live. Changes are saved in this browser.</p>
+        <label class="field"><span>Name</span><input id="fName" autocomplete="off"></label>
         <div class="field-grid">
           <label class="field"><span>Initials</span><input id="fInitials" maxlength="2" autocomplete="off"></label>
           <label class="field"><span>Currency</span>
@@ -206,7 +269,7 @@
         </div>
 
         <div class="sheet-sep"></div>
-        <div class="sheet-sub-row"><div class="sheet-sub">Transactions</div><span class="sheet-count" id="txCount"></span></div>
+        <div class="sheet-sub-row"><div class="sheet-sub">Recent payments</div><span class="sheet-count" id="txCount"></span></div>
         <div class="tx-editor" id="txEditor"></div>
         <button class="add-tx" id="addTx">+ Add transaction</button>
 

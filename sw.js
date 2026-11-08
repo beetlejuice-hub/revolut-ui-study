@@ -1,5 +1,5 @@
 /* Offline cache for the Revolut UI study. Bump CACHE when assets change. */
-const CACHE = 'revolut-study-v4';
+const CACHE = 'revolut-study-v7';
 
 const ASSETS = [
   './',
@@ -14,6 +14,18 @@ const ASSETS = [
   './js/icons.js',
   './js/render.js',
   './js/app.js',
+  './img/loans.jpg',
+  './img/logos/lidl-google.png',
+  './img/logos/kaufland-google.png',
+  './img/logos/claude-symbol.svg',
+  './img/logos/anthropic-google.png',
+  './img/logos/netflix-google.png',
+  './img/logos/bolt-google.png',
+  './img/logos/petrom-google.png',
+  './img/logos/profi-512.png',
+  './img/logos/eventum.webp',
+  './img/logos/hamm-512.png',
+  './img/logos/aircash-google.png',
   './fonts/inter-latin.woff2',
   './fonts/inter-latin-ext.woff2',
   './icons/icon-192.png',

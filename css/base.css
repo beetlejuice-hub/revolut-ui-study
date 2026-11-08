@@ -5,6 +5,7 @@
   --red:#ff3b5c;
   --blue:#2b45ff;
   --orange:#ff6a2b;
+  --green:#3ddc84;
   --muted:rgba(255,255,255,.56);
   --card:rgba(255,255,255,.06);
   --card-2:rgba(255,255,255,.09);
@@ -44,8 +45,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
 
 .stage{
   position:relative;
-  width:393px;
-  height:852px;
+  width:390px;
+  height:844px;
   margin:0 auto;
 }
 .caption{
@@ -67,8 +68,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
   position:absolute;
   top:0;
   left:0;
-  width:393px;
-  height:852px;
+  width:390px;
+  height:844px;
   transform:scale(var(--s,1));
   transform-origin:top left;
   border-radius:54px;
@@ -104,14 +105,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
   inset:0;
   z-index:0;
   background:
-    radial-gradient(120% 52% at 50% -6%,rgba(104,132,255,.8) 0%,rgba(55,85,255,.28) 42%,transparent 72%),
-    linear-gradient(180deg,#2f4bff 0%,#2439f0 9%,#1726b8 24%,#0b1366 40%,#060b38 58%,#04060f 77%,#05050b 100%);
+    radial-gradient(95% 44% at 50% -4%,rgba(120,145,255,.5) 0%,rgba(64,92,255,.2) 45%,transparent 74%),
+    linear-gradient(180deg,#2e48ff 0%,#2438e8 10%,#1723ad 25%,#0c1260 43%,#060a30 60%,#04060f 78%,#05050b 100%);
 }
 .noise{
   position:absolute;
   inset:0;
   z-index:0;
-  opacity:.055;
+  opacity:.05;
   mix-blend-mode:soft-light;
   pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -126,10 +127,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
   overflow-x:hidden;
   overscroll-behavior:contain;
   scrollbar-width:none;
-  padding-top:108px;
+  padding-top:109px;
 }
 .home::-webkit-scrollbar{display:none}
-.home-pad{height:132px}
+.home-pad{height:128px}
 
 /* ============ status bar ============ */
 .statusbar{
@@ -152,7 +153,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
   position:relative;
   width:25px;height:13px;
   border-radius:4px;
-  background:#fff;
+  background:#ffd60a;
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -166,7 +167,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
   border-radius:0 2px 2px 0;
   background:rgba(255,255,255,.65);
 }
-.batt-num{font-size:8.5px;font-weight:700;color:#0a0a0f;letter-spacing:0}
+.batt-num{font-size:8.5px;font-weight:700;color:#111;letter-spacing:0}
 
 /* ============ top bar ============ */
 .topbar{
@@ -175,28 +176,28 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
   z-index:26;
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:5px 16px 12px;
+  gap:8px;
+  padding:6px 14px 12px;
 }
 .topbar::before{
   content:'';
   position:absolute;
-  inset:-52px -12px -20px;
+  inset:-52px -12px -18px;
   z-index:-1;
-  background:linear-gradient(180deg,rgba(28,41,180,.97) 0%,rgba(25,37,160,.9) 52%,rgba(20,30,130,0) 100%);
+  background:linear-gradient(180deg,rgba(29,42,184,.98) 0%,rgba(29,42,184,.98) 78%,rgba(25,37,160,.92) 88%,rgba(20,30,130,0) 100%);
   opacity:var(--sp);
   pointer-events:none;
 }
 .avatar{
   position:relative;
   flex:0 0 auto;
-  width:44px;height:44px;
+  width:40px;height:40px;
   border-radius:50%;
-  background:rgba(255,255,255,.13);
+  background:rgba(255,255,255,.14);
   border:1px solid rgba(255,255,255,.12);
   display:grid;
   place-items:center;
-  font-size:16px;
+  font-size:14.5px;
   font-weight:600;
   letter-spacing:.01em;
   transition:transform .18s ease,background .18s ease;
@@ -205,7 +206,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
 .avatar .dot{
   position:absolute;
   top:-1px;right:2px;
-  width:9px;height:9px;
+  width:8px;height:8px;
   border-radius:50%;
   background:var(--red);
   box-shadow:0 0 0 2px #2b45ff;
@@ -213,15 +214,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
 .searchpill{
   flex:1;
   min-width:0;
-  height:44px;
-  border-radius:22px;
+  height:40px;
+  border-radius:20px;
   background:rgba(255,255,255,.10);
   border:1px solid rgba(255,255,255,.10);
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:0 16px;
-  font-size:17px;
+  gap:9px;
+  padding:0 14px;
+  font-size:16px;
   font-weight:400;
   color:#fff;
   text-align:left;
@@ -231,7 +232,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
 .searchpill svg{flex:none;opacity:.95}
 .iconbtn{
   flex:0 0 auto;
-  width:44px;height:44px;
+  width:40px;height:40px;
   border-radius:50%;
   background:rgba(255,255,255,.10);
   border:1px solid rgba(255,255,255,.10);
@@ -243,28 +244,31 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
 
 /* ============ hero ============ */
 .hero{
-  padding:68px 24px 0;
+  padding:66px 22px 0;
   text-align:center;
   animation:rise .7s cubic-bezier(.2,.8,.2,1) both;
 }
 .hero-body{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
   will-change:transform,opacity;
 }
 .hero-kicker{
-  font-size:15px;
+  font-size:14px;
   font-weight:500;
-  color:rgba(255,255,255,.76);
+  color:rgba(255,255,255,.78);
   letter-spacing:.005em;
-  margin-bottom:3px;
+  margin-bottom:2px;
 }
 .hero-balance{
   display:flex;
   align-items:baseline;
   justify-content:center;
   gap:0;
-  font-size:60px;
+  font-size:48px;
   font-weight:700;
-  line-height:1.02;
+  line-height:1.04;
   letter-spacing:-.045em;
   cursor:pointer;
   user-select:none;
@@ -272,13 +276,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
 }
 .hero-balance:hover{opacity:.92}
 .hero-balance .dec{font-size:.6em;letter-spacing:-.025em}
-.hero-balance .cur{font-size:.44em;font-weight:600;letter-spacing:0;margin-left:8px}
+.hero-balance .cur{font-size:.44em;font-weight:600;letter-spacing:0;margin-left:7px}
 .iban{
   display:inline-flex;
   align-items:center;
-  gap:7px;
-  margin-top:13px;
-  font-size:13px;
+  gap:6px;
+  margin-top:12px;
+  font-size:12.5px;
   font-weight:400;
   letter-spacing:.015em;
   color:rgba(255,255,255,.88);
@@ -287,13 +291,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
 .iban:hover{opacity:.75}
 .iban-ic{opacity:.95;flex:none}
 .accounts-pill{
-  margin-top:29px;
-  height:44px;
-  padding:0 24px;
+  margin-top:46px;
+  height:38px;
+  padding:0 22px;
   border-radius:999px;
   background:rgba(255,255,255,.135);
   border:1px solid rgba(255,255,255,.07);
-  font-size:15px;
+  font-size:14px;
   font-weight:600;
   letter-spacing:.005em;
   transition:transform .18s ease,background .18s ease;
@@ -304,21 +308,21 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
 .actions{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:4px;
-  padding:28px 14px 0;
+  gap:2px;
+  padding:50px 12px 0;
   animation:rise .7s .06s cubic-bezier(.2,.8,.2,1) both;
 }
 .action{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:10px;
-  font-size:14.5px;
+  gap:7px;
+  font-size:13px;
   font-weight:500;
   letter-spacing:.002em;
 }
 .action-ic{
-  width:66px;height:66px;
+  width:46px;height:46px;
   border-radius:50%;
   background:rgba(255,255,255,.105);
   border:1px solid rgba(255,255,255,.06);
@@ -327,6 +331,88 @@ button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focu
   transition:transform .18s ease,background .18s ease;
 }
 .action:active .action-ic{transform:scale(.92);background:rgba(255,255,255,.18)}
+
+/* ============ launch / Face ID screen ============ */
+.lock{
+  position:absolute;
+  inset:0;
+  z-index:80;
+  overflow:hidden;
+  background:
+    radial-gradient(95% 52% at 50% 0%,rgba(140,160,255,.55) 0%,rgba(90,115,255,.22) 48%,transparent 74%),
+    linear-gradient(180deg,#4f6bff 0%,#3a54f0 18%,#2b45e0 38%,#1a2a9e 60%,#0e1660 82%,#080d33 100%);
+  color:#fff;
+  opacity:1;
+  transition:opacity .55s ease,transform .55s ease;
+}
+.lock.gone{opacity:0;transform:scale(1.04);pointer-events:none}
+.lock-glow{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(60% 40% at 50% 18%,rgba(255,255,255,.12),transparent 70%);
+  pointer-events:none;
+}
+.lock-body{
+  position:absolute;
+  top:calc(126px + env(safe-area-inset-top,0px));
+  left:0;right:0;
+  z-index:2;
+  padding:0 30px;
+  text-align:center;
+}
+.lock-avatar{
+  width:78px;height:78px;
+  margin:0 auto;
+  border-radius:50%;
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.22);
+  display:grid;
+  place-items:center;
+  font-size:27px;
+  font-weight:600;
+  letter-spacing:.02em;
+  color:rgba(255,255,255,.92);
+  box-shadow:0 16px 40px rgba(0,0,0,.18);
+}
+.lock h1{
+  margin-top:22px;
+  font-size:30px;
+  line-height:1.2;
+  font-weight:700;
+  letter-spacing:-.035em;
+  text-wrap:balance;
+}
+.lock h1 span{color:#fff}
+.lock-faceid{
+  position:absolute;
+  top:calc(350px + env(safe-area-inset-top,0px));
+  left:50%;
+  transform:translateX(-50%);
+  z-index:2;
+  width:146px;
+  height:146px;
+  border-radius:26px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.16);
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  color:#fff;
+  box-shadow:0 24px 60px rgba(0,0,0,.18);
+  transition:transform .18s ease,background .18s ease;
+  animation:faceid 2.1s ease-in-out infinite;
+}
+.lock-faceid:active{transform:translateX(-50%) scale(.96);background:rgba(255,255,255,.16)}
+.faceid-check{display:grid;place-items:center;color:#fff}
+.faceid-label{font-size:16px;font-weight:500;color:rgba(255,255,255,.78);letter-spacing:.01em}
+@keyframes faceid{
+  0%,100%{opacity:.82}
+  50%{opacity:1}
+}
 
 @keyframes rise{
   from{opacity:0;transform:translateY(16px)}

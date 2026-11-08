@@ -229,6 +229,18 @@
   .caption{display:none}
   .phone.detail-open .home-layer{transform:none;filter:none;border-radius:0}
   .detail{border-radius:0}
+
+  /* use the phone's real status bar instead of the fake one */
+  .statusbar{display:none}
+  .topbar{top:env(safe-area-inset-top,0px)}
+  .home{padding-top:calc(58px + env(safe-area-inset-top,0px))}
+  .home-pad{height:calc(96px + env(safe-area-inset-bottom,0px))}
+  .detail::before{height:env(safe-area-inset-top,0px)}
+  .detail-scroll{padding-top:0}
+  .detail-head{top:0;padding-top:env(safe-area-inset-top,0px)}
+  .sheet-body{padding-bottom:calc(26px + env(safe-area-inset-bottom,0px))}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .lock{padding-top:calc(64px + env(safe-area-inset-top,0px))}
 }
 
 /* ============ installed web app (standalone) ============ */
@@ -236,12 +248,13 @@
   body{padding:0}
   .statusbar{display:none}
   .topbar{top:env(safe-area-inset-top,0px)}
-  .home{padding-top:calc(56px + env(safe-area-inset-top,0px))}
-  .tabbar{bottom:calc(10px + env(safe-area-inset-bottom,0px))}
-  .home-pad{height:calc(132px + env(safe-area-inset-bottom,0px))}
-  .detail-scroll{padding-top:calc(10px + env(safe-area-inset-top,0px))}
+  .home{padding-top:calc(58px + env(safe-area-inset-top,0px))}
+  .home-pad{height:calc(96px + env(safe-area-inset-bottom,0px))}
+  .detail::before{height:env(safe-area-inset-top,0px)}
+  .detail-scroll{padding-top:0}
+  .detail-head{top:0;padding-top:env(safe-area-inset-top,0px)}
   .sheet-body{padding-bottom:calc(26px + env(safe-area-inset-bottom,0px))}
-  .toast{bottom:calc(104px + env(safe-area-inset-bottom,0px))}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 }
 
 @media (prefers-reduced-motion:reduce){

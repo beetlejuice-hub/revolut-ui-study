@@ -10,15 +10,19 @@
   const heroBody = $('#heroBody');
   const detail = $('#detailScreen');
   const detailScroll = $('#detailScroll');
-  const detailSearch = $('#detailSearch');
+  const detailHead = $('#detailHead');
+  const monthPills = $('#monthPills');
   const backdrop = $('#backdrop');
   const toastEl = $('#toast');
+  const lock = $('#lockScreen');
   const themeMeta = $('meta[name="theme-color"]');
   const setTheme = (color) => { if (themeMeta) themeMeta.setAttribute('content', color); };
 
   let detailOpen = false;
   let activeSheet = null;
   let scrollRaf = null;
+  let detailRaf = null;
+  let activeGroupKey = '';
   let promoIndex = 0;
   let promoPausedUntil = 0;
   let toastTimer = null;
@@ -31,6 +35,31 @@
     toastEl.classList.add('show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1900);
+  }
+
+  /* ============ launch / Face ID ============ */
+  function initLock() {
+    if (!lock) return;
+    const nameEl = $('#lockName');
+    if (nameEl) nameEl.textContent = D.state.name || 'there';
+    const avatarEl = $('#lockAvatar');
+    if (avatarEl) avatarEl.textContent = D.state.initials || 'AL';
+    if (new URLSearchParams(location.search).has('nolock')) {
+      lock.style.display = 'none';
+      return;
+    }
+    let done = false;
+    const unlock = () => {
+      if (done) return;
+      done = true;
+      lock.classList.add('gone');
+      lock.setAttribute('aria-hidden', 'true');
+      setTimeout(() => { lock.style.display = 'none'; }, 620);
+    };
+    lock.addEventListener('click', unlock);
+    const face = $('#lockFace');
+    if (face) face.addEventListener('click', (e) => { e.stopPropagation(); unlock(); });
+    setTimeout(unlock, 2200);
   }
 
   /* ============ sheets ============ */
@@ -48,16 +77,54 @@
   }
 
   /* ============ detail screen ============ */
-  function openDetail(focusSearch) {
+  function collapsedHeadHeight() {
+    const wasCompact = detailHead.classList.contains('compact');
+    const prev = detailHead.style.transition;
+    detailHead.style.transition = 'none';
+    detailHead.classList.add('compact');
+    const h = detailHead.offsetHeight;
+    if (!wasCompact) detailHead.classList.remove('compact');
+    detailHead.style.transition = prev;
+    return h;
+  }
+
+  function updateDetailHeader() {
+    if (!detailOpen) return;
+    const compact = detailScroll.scrollTop > 26;
+    detailHead.classList.toggle('compact', compact);
+    const groups = $$('#detailBody .dgroup');
+    if (!groups.length) return;
+    const scrollTop = detailScroll.getBoundingClientRect().top;
+    const cutoff = scrollTop + detailHead.offsetHeight + 24;
+    let active = groups[0];
+    for (const g of groups) {
+      if (g.getBoundingClientRect().top <= cutoff) active = g;
+      else break;
+    }
+    const key = active.dataset.key;
+    if (key === activeGroupKey) return;
+    activeGroupKey = key;
+    R.paintDetailBalance(Number(active.dataset.balance) || 0);
+    const date = $('#detailDate');
+    if (date) date.textContent = active.dataset.label || '';
+    $$('#monthPills .mpill').forEach((p) => {
+      p.classList.toggle('on', p.dataset.month === active.dataset.month);
+    });
+  }
+
+  function openDetail() {
     if (activeSheet) closeSheets();
     detailOpen = true;
     phone.classList.add('detail-open');
     detail.classList.add('open');
     detail.setAttribute('aria-hidden', 'false');
     detailScroll.scrollTop = 0;
+    detailHead.classList.remove('compact');
+    activeGroupKey = '';
     setTheme('#0a0a0b');
     R.renderDetail();
-    if (focusSearch) setTimeout(() => detailSearch.focus({ preventScroll: true }), 470);
+    R.renderMonthPills();
+    updateDetailHeader();
   }
   function closeDetail() {
     detailOpen = false;
@@ -65,24 +132,41 @@
     detail.classList.remove('open');
     detail.setAttribute('aria-hidden', 'true');
     setTheme('#2b45ff');
-    if (detailSearch.value) {
-      detailSearch.value = '';
-      R.renderDetail();
-    }
   }
 
-  /* ============ scroll / hero collapse ============ */
+  detailScroll.addEventListener('scroll', () => {
+    if (!detailRaf) detailRaf = requestAnimationFrame(() => { detailRaf = null; updateDetailHeader(); });
+  }, { passive: true });
+
+  monthPills.addEventListener('click', (e) => {
+    const b = e.target.closest('.mpill');
+    if (!b) return;
+    const group = document.querySelector(`#detailBody .dgroup[data-month="${b.dataset.month}"]`);
+    if (!group) { toast('No transactions this month'); return; }
+    detailHead.classList.add('compact');
+    const h = collapsedHeadHeight();
+    const top = group.offsetTop - h - 8;
+    detailScroll.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  });
+
+  /* ============ home scroll / hero collapse ============ */
   function onScroll() {
     const y = home.scrollTop;
     const bar = Math.min(1, y / 70);
     phone.style.setProperty('--sp', String(bar));
-    const fade = Math.min(1, Math.max(0, (y - 105) / 135));
+    const fade = Math.min(1, Math.max(0, (y - 90) / 120));
     heroBody.style.opacity = String(1 - fade);
-    heroBody.style.transform = `translate3d(0,${(-y * 0.12).toFixed(1)}px,0) scale(${(1 - Math.min(1, y / 2600)).toFixed(3)})`;
+    heroBody.style.transform = `translate3d(0,${(-y * 0.12).toFixed(1)}px,0) scale(${(1 - Math.min(1, y / 2400)).toFixed(3)})`;
   }
   home.addEventListener('scroll', () => {
     if (!scrollRaf) scrollRaf = requestAnimationFrame(() => { scrollRaf = null; onScroll(); });
   }, { passive: true });
+
+  function scrollHomeTo(sel) {
+    const el = $(sel);
+    if (!el) return;
+    home.scrollTo({ top: Math.max(0, el.offsetTop - 108), behavior: 'smooth' });
+  }
 
   /* ============ promos ============ */
   function promoCards() { return $$('#promoTrack .promo'); }
@@ -104,7 +188,7 @@
     let best = 0;
     let bd = Infinity;
     cards.forEach((c, i) => {
-      const d = Math.abs((c.offsetLeft - 16) - x);
+      const d = Math.abs((c.offsetLeft - 14) - x);
       if (d < bd) { bd = d; best = i; }
     });
     if (best !== promoIndex) {
@@ -118,7 +202,7 @@
     const cards = promoCards();
     if (!cards[i]) return;
     promoIndex = i;
-    track.scrollTo({ left: Math.max(0, cards[i].offsetLeft - 16), behavior: 'smooth' });
+    track.scrollTo({ left: Math.max(0, cards[i].offsetLeft - 14), behavior: 'smooth' });
     $$('#promoDots .dot').forEach((d, k) => d.classList.toggle('on', k === i));
   }
 
@@ -143,15 +227,17 @@
       const u = D.state.upcoming;
       t = { name: u.name, amount: u.amount, time: u.detail, cat: 'Subscription', icon: u.icon || 'apple' };
     } else {
-      t = D.state.transactions.find((x) => x.id === id);
+      t = D.findTx(id);
     }
     if (!t) return;
+    const amt = t.hideAmount ? '—' : D.fmtSigned(t.amount);
+    const whenTxt = t.date ? D.txWhen(t) : (t.time || t.note || t.alt || '');
     $('#txSheetBody').innerHTML = `
       <button class="sheet-close" data-close style="position:absolute;top:12px;right:16px" aria-label="Close">×</button>
       <div class="txs-icon">${R.txIcon(t)}</div>
-      <div class="txs-amt">${D.fmt(t.amount)}</div>
+      <div class="txs-amt${t.amount > 0 ? ' positive' : ''}">${amt}</div>
       <div class="txs-name">${D.esc(t.name)}</div>
-      <div class="txs-time">${D.esc(t.time || '')} · Completed</div>
+      <div class="txs-time">${D.esc(whenTxt)} · Completed</div>
       <div class="txs-rows">
         <div><span>Category</span><b>${D.esc(t.cat || 'Payment')}</b></div>
         <div><span>Account</span><b>Personal · ${D.esc(D.CUR[D.state.currency] || D.state.currency)}</b></div>
@@ -193,9 +279,9 @@
     }
   });
   $('#accountsBtn').addEventListener('click', () => openDetail());
-  $('#searchHome').addEventListener('click', () => openDetail(true));
-  $('#statsBtn').addEventListener('click', () => openDetail());
-  $('#cardBtn').addEventListener('click', () => toast('Cards — demo only'));
+  $('#searchHome').addEventListener('click', () => openDetail());
+  $('#statsBtn').addEventListener('click', () => scrollHomeTo('#spentSec'));
+  $('#cardBtn').addEventListener('click', () => scrollHomeTo('#cardsSec'));
   $('#seeAll').addEventListener('click', () => openDetail());
   $('#backBtn').addEventListener('click', closeDetail);
 
@@ -247,11 +333,7 @@
     }
   });
 
-  /* ============ events: detail ============ */
-  detailSearch.addEventListener('input', R.renderDetail);
-  $('#filterBtn').addEventListener('click', () => toast('Filters — demo only'));
-
-  /* edge-swipe back */
+  /* ============ events: edge-swipe back ============ */
   detail.addEventListener('pointerdown', (e) => {
     if (!detailOpen || e.clientX > 36) return;
     dragX = e.clientX;
@@ -286,14 +368,44 @@
   document.addEventListener('click', (e) => {
     const tx = e.target.closest('[data-tx]');
     if (tx) { openTx(tx.dataset.tx); return; }
+    const card = e.target.closest('[data-card]');
+    if (card) { toast('Card — demo only'); return; }
+    const wealth = e.target.closest('[data-wealth]');
+    if (wealth) { toast('Wealth — demo only'); return; }
     if (e.target.closest('#schedLink')) { toast('Scheduled payments — demo only'); return; }
     if (e.target.closest('[data-act]')) { toast(e.target.closest('[data-act]').dataset.act + ' — demo only'); return; }
     if (e.target.closest('[data-close]')) { closeSheets(); return; }
   });
   backdrop.addEventListener('click', closeSheets);
 
+  /* ============ events: home sections ============ */
+  $('#loansCta').addEventListener('click', () => toast('Loans — demo only'));
+  $('#loansClose').addEventListener('click', () => {
+    const card = $('#loansCard');
+    if (!card) return;
+    card.style.transition = 'opacity .22s ease, transform .22s ease';
+    card.style.opacity = '0';
+    card.style.transform = 'scale(.97)';
+    setTimeout(() => { card.remove(); }, 240);
+  });
+  $('#cardsSeeAll').addEventListener('click', () => toast('All cards — demo only'));
+  $('#wealthHead').addEventListener('click', () => toast('Total wealth — demo only'));
+  $('#spentSeeAll').addEventListener('click', () => toast('Spending analytics — demo only'));
+
   /* ============ events: editor fields ============ */
-  const saveAndPaint = () => { D.save(); R.renderHome(); R.renderDetail(); };
+  const saveAndPaint = () => {
+    D.save();
+    R.renderHome();
+    R.renderDetail();
+    if (detailOpen) updateDetailHeader();
+  };
+
+  $('#fName').addEventListener('input', (e) => {
+    D.state.name = e.target.value || 'Arnold';
+    D.save();
+    const lockName = $('#lockName');
+    if (lockName) lockName.textContent = D.state.name;
+  });
 
   $('#fInitials').addEventListener('input', (e) => {
     D.state.initials = (e.target.value || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 2);
@@ -314,6 +426,8 @@
     D.state.balance = Math.round(v * 100) / 100;
     D.save();
     R.paintBalance(D.state.balance);
+    R.renderDetail();
+    if (detailOpen) updateDetailHeader();
   });
 
   $('#fIban').addEventListener('input', (e) => {
@@ -343,6 +457,7 @@
     D.save();
     R.renderHome();
     R.renderDetail();
+    if (detailOpen) updateDetailHeader();
   });
 
   $('#txEditor').addEventListener('click', (e) => {
@@ -353,19 +468,21 @@
     R.renderEditor();
     R.renderHome();
     R.renderDetail();
+    if (detailOpen) updateDetailHeader();
     toast('Transaction removed');
   });
 
   $('#addTx').addEventListener('click', () => {
     const t = {
       id: D.uid(), name: 'New payment', amount: -10,
-      time: 'Today, just now', day: 'today', icon: 'initials', cat: 'Payment'
+      date: D.isoDate(new Date()), at: D.nowTime(), icon: 'initials', cat: 'Payment'
     };
     D.state.transactions.unshift(t);
     D.save();
     R.renderEditor();
     R.renderHome();
     R.renderDetail();
+    if (detailOpen) updateDetailHeader();
     const input = document.querySelector(`.edit-row[data-id="${t.id}"] .e-name`);
     if (input) { input.focus(); input.select(); }
   });
@@ -376,6 +493,7 @@
     R.renderEditor();
     R.renderHome();
     R.renderDetail();
+    if (detailOpen) updateDetailHeader();
     R.paintBalance(D.state.balance);
     toast('Demo reset');
   });
@@ -397,20 +515,12 @@
     D.state.balance = Math.round((D.state.balance + addValue) * 100) / 100;
     D.save();
     R.animateBalance(D.state.balance, 750);
+    R.renderDetail();
+    if (detailOpen) updateDetailHeader();
     const added = D.fmt(addValue).replace('-', '');
     closeSheets();
     toast('Added ' + added);
   });
-
-  /* ============ offer ============ */
-  $('#offerX').addEventListener('click', () => {
-    const c = $('#offerCard');
-    c.style.transition = 'opacity .24s ease, transform .24s ease';
-    c.style.opacity = '0';
-    c.style.transform = 'scale(.96)';
-    setTimeout(() => c.remove(), 240);
-  });
-  $('#offerCta').addEventListener('click', () => toast('Loans — demo only'));
 
   /* ============ keyboard ============ */
   document.addEventListener('keydown', (e) => {
@@ -435,11 +545,11 @@
       phone.style.removeProperty('--s');
       return;
     }
-    const availH = window.innerHeight - 150;
-    const availW = window.innerWidth - 56;
-    const s = Math.max(0.42, Math.min(1, availH / 852, availW / 393));
-    stage.style.width = (393 * s).toFixed(1) + 'px';
-    stage.style.height = (852 * s).toFixed(1) + 'px';
+    const availH = window.innerHeight - 140;
+    const availW = window.innerWidth - 48;
+    const s = Math.max(0.4, Math.min(1, availH / 844, availW / 390));
+    stage.style.width = (390 * s).toFixed(1) + 'px';
+    stage.style.height = (844 * s).toFixed(1) + 'px';
     phone.style.setProperty('--s', s.toFixed(4));
   }
   window.addEventListener('resize', fitStage);
@@ -449,20 +559,16 @@
   R.renderPromos();
   buildDots();
   R.renderHome();
+  R.renderMonthPills();
   R.paintBalance(0);
   R.renderDetail();
   R.tickClock();
   setInterval(R.tickClock, 15000);
   onScroll();
   setTimeout(() => R.animateBalance(D.state.balance, 1100), 320);
+  initLock();
 
-  setInterval(() => {
-    if (detailOpen || activeSheet || document.hidden) return;
-    if (Date.now() < promoPausedUntil) return;
-    const cards = promoCards();
-    if (cards.length < 2) return;
-    scrollToPromo((promoIndex + 1) % cards.length);
-  }, 4800);
+  /* The promo carousel is user-driven; it should not auto-advance. */
 
   /* ============ installable web app ============ */
   if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
