@@ -58,7 +58,7 @@
 }
 .backbtn:active{transform:scale(.92);background:#26262b}
 .detail-mini-balance{
-  font-size:18px;
+  font-size:16px;
   font-weight:600;
   letter-spacing:-.02em;
   opacity:0;
@@ -70,7 +70,7 @@
 .detail-head.compact .detail-mini-balance{opacity:1;transform:translateY(0)}
 .detail-balance-wrap{
   overflow:hidden;
-  max-height:112px;
+  max-height:96px;
   opacity:1;
   transition:max-height .3s cubic-bezier(.32,.72,0,1),opacity .2s ease,margin .3s ease;
 }
@@ -84,14 +84,15 @@
   align-items:baseline;
   gap:0;
   margin-top:8px;
-  font-size:46px;
+  font-size:38px;
   font-weight:700;
   line-height:1.04;
   letter-spacing:-.045em;
+  color:#fff;
 }
 .detail-balance .dec{font-size:.6em;letter-spacing:-.025em}
 .detail-balance .cur{font-size:.4em;font-weight:600;letter-spacing:0;margin-left:6px}
-.detail-date{margin-top:3px;font-size:15px;color:#8b8b93;letter-spacing:.002em}
+.detail-date{margin-top:3px;font-size:14px;color:#8b8b93;letter-spacing:.002em}
 
 /* month pills */
 .month-pills{
@@ -136,8 +137,8 @@
   padding:0 18px;
   margin-bottom:10px;
 }
-.dgroup-head h2{font-size:22px;font-weight:600;letter-spacing:-.02em}
-.dgroup-total{font-size:17px;color:#8b8b93;font-weight:400;white-space:nowrap}
+.dgroup-head h2{font-size:20px;font-weight:600;letter-spacing:-.02em}
+.dgroup-total{font-size:15px;color:#8b8b93;font-weight:400;white-space:nowrap}
 .dgroup-total.positive{color:#3ddc84}
 .dcard{
   margin:0 12px;
@@ -159,15 +160,15 @@
 .drow + .drow{border-top:1px solid rgba(255,255,255,.045)}
 .drow:active{background:#1b1b1e}
 .dmain{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
-.dname{font-size:16px;font-weight:500;line-height:1.2;letter-spacing:-.012em}
-.dsub{font-size:13px;color:#8b8b93;line-height:1.25}
-.dsub2{font-size:13px;color:#8b8b93;line-height:1.25}
+.dname{font-size:15px;font-weight:500;line-height:1.2;letter-spacing:-.012em}
+.dsub{font-size:12.5px;color:#8b8b93;line-height:1.25}
+.dsub2{font-size:12.5px;color:#8b8b93;line-height:1.25}
 .damt{
   display:flex;
   flex-direction:column;
   align-items:flex-end;
   gap:2px;
-  font-size:16px;
+  font-size:15px;
   font-weight:500;
   letter-spacing:-.01em;
   flex:none;
@@ -177,7 +178,7 @@
 }
 .damt.positive{color:#3ddc84}
 .damt.muted{color:#77777f}
-.damt .amt-alt{font-size:13px;font-weight:400;color:#8b8b93;letter-spacing:0}
+.damt .amt-alt{font-size:12px;font-weight:400;color:#8b8b93;letter-spacing:0}
 .dempty{
   padding:30px 22px;
   text-align:center;

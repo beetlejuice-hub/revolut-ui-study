@@ -94,22 +94,27 @@
     detailHead.classList.toggle('compact', compact);
     const groups = $$('#detailBody .dgroup');
     if (!groups.length) return;
-    const scrollTop = detailScroll.getBoundingClientRect().top;
-    const cutoff = scrollTop + detailHead.offsetHeight + 24;
-    let active = groups[0];
+    const cutoff = detailHead.getBoundingClientRect().bottom - 6;
+    let active = null;
     for (const g of groups) {
       if (g.getBoundingClientRect().top <= cutoff) active = g;
       else break;
     }
-    const key = active.dataset.key;
+    const key = active ? active.dataset.key : '__top';
     if (key === activeGroupKey) return;
     activeGroupKey = key;
-    R.paintDetailBalance(Number(active.dataset.balance) || 0);
     const date = $('#detailDate');
-    if (date) date.textContent = active.dataset.label || '';
-    $$('#monthPills .mpill').forEach((p) => {
-      p.classList.toggle('on', p.dataset.month === active.dataset.month);
-    });
+    const pills = $$('#monthPills .mpill');
+    if (active) {
+      R.paintDetailBalance(Number(active.dataset.balance) || 0);
+      if (date) date.textContent = active.dataset.label || '';
+      pills.forEach((p) => p.classList.toggle('on', p.dataset.month === active.dataset.month));
+    } else {
+      R.paintDetailBalance(Number(D.state.balance) || 0);
+      if (date) date.textContent = 'Current balance';
+      const current = D.MONTHS[D.MONTHS.length - 1].key;
+      pills.forEach((p) => p.classList.toggle('on', p.dataset.month === current));
+    }
   }
 
   function openDetail() {
