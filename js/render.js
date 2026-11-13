@@ -249,7 +249,7 @@
   function groupHTML(g) {
     const total = D.sum(g.rows);
     const totalHTML = g.rows.length
-      ? `<span class="dgroup-total${total > 0 ? ' positive' : ''}">${D.fmtSigned(total)}</span>`
+      ? `<span class="dgroup-total">${D.fmtSigned(total)}</span>`
       : '';
     const rows = g.rows.length
       ? g.rows.map(detailRow).join('')

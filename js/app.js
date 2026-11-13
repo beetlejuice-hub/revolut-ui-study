@@ -256,6 +256,31 @@
     openSheet($('#txSheet'));
   }
 
+  /* ============ history-only transaction ============ */
+  function openHistorySheet() {
+    const sel = $('#hDay');
+    if (sel) {
+      sel.innerHTML = D.HISTORY.map((g) => {
+        const label = D.groupLabel(g.date) || g.label;
+        return `<option value="${D.esc(g.key)}">${D.esc(label)}</option>`;
+      }).join('');
+    }
+    const name = $('#hName');
+    if (name) name.value = '';
+    const amount = $('#hAmount');
+    if (amount) amount.value = '';
+    const time = $('#hTime');
+    if (time) time.value = D.nowTime();
+    openSheet($('#histSheet'));
+    setTimeout(() => { if (name) name.focus({ preventScroll: true }); }, 380);
+  }
+
+  function refreshDetail() {
+    R.renderDetail();
+    activeGroupKey = '';
+    if (detailOpen) updateDetailHeader();
+  }
+
   /* ============ editor ============ */
   function openEditor(focus) {
     R.renderEditor();
@@ -490,6 +515,36 @@
     if (detailOpen) updateDetailHeader();
     const input = document.querySelector(`.edit-row[data-id="${t.id}"] .e-name`);
     if (input) { input.focus(); input.select(); }
+  });
+
+  /* ============ events: history-only transactions ============ */
+  $('#addHistoryBtn').addEventListener('click', openHistorySheet);
+
+  $('#histSubmit').addEventListener('click', () => {
+    const name = ($('#hName').value || '').trim() || 'Payment';
+    const amount = Math.round((parseFloat($('#hAmount').value) || 0) * 100) / 100;
+    const time = /^\d{2}:\d{2}$/.test($('#hTime').value) ? $('#hTime').value : D.nowTime();
+    const group = $('#hDay').value;
+    if (!group) { toast('Pick a day'); return; }
+    if (!amount) { toast('Enter an amount'); return; }
+    D.state.historyExtra = D.state.historyExtra || [];
+    D.state.historyExtra.push({
+      id: D.uid(), group, name, amount, time,
+      icon: 'initials', badge: amount < 0 ? 'out' : 'in', cat: 'Payment'
+    });
+    D.save();
+    refreshDetail();
+    closeSheets();
+    const day = D.HISTORY.find((g) => g.key === group);
+    toast('Added to ' + (day ? (D.groupLabel(day.date) || day.label) : 'history'));
+    setTimeout(() => {
+      const el = document.querySelector(`#detailBody .dgroup[data-key="${group}"]`);
+      if (!el) return;
+      detailHead.classList.add('compact');
+      const h = collapsedHeadHeight();
+      detailScroll.scrollTo({ top: Math.max(0, el.offsetTop - h - 10), behavior: 'smooth' });
+      setTimeout(() => { activeGroupKey = ''; updateDetailHeader(); }, 420);
+    }, 60);
   });
 
   $('#resetBtn').addEventListener('click', () => {

@@ -57,6 +57,17 @@
   transition:transform .18s ease,background .18s ease;
 }
 .backbtn:active{transform:scale(.92);background:#26262b}
+.addbtn{
+  width:44px;height:44px;
+  border-radius:50%;
+  background:#1b1b1f;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  flex:none;
+  transition:transform .18s ease,background .18s ease;
+}
+.addbtn:active{transform:scale(.92);background:#26262b}
 .detail-mini-balance{
   font-size:16px;
   font-weight:600;
@@ -139,7 +150,6 @@
 }
 .dgroup-head h2{font-size:20px;font-weight:600;letter-spacing:-.02em}
 .dgroup-total{font-size:15px;color:#8b8b93;font-weight:400;white-space:nowrap}
-.dgroup-total.positive{color:#3ddc84}
 .dcard{
   margin:0 12px;
   background:#141416;

@@ -223,6 +223,9 @@
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
             </button>
             <div class="detail-mini-balance" id="detailMiniBalance">0,00 lei</div>
+            <button class="addbtn" id="addHistoryBtn" aria-label="Add transaction to spending history">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
           </div>
           <div class="detail-balance-wrap" id="detailBalWrap">
             <div class="detail-balance" id="detailBalance"><span class="int">0</span><span class="dec">,00</span><span class="cur">lei</span></div>
@@ -300,6 +303,24 @@
         </div>
         <button class="primary wide" id="addSubmit">Add to balance</button>
         <p class="fine">Demo only — no real money is moved.</p>
+      </div>
+    </div>
+
+    <div class="sheet" id="histSheet" role="dialog" aria-modal="true" aria-label="Add transaction to spending history">
+      <div class="grabber"></div>
+      <div class="sheet-head">
+        <h2>Add transaction</h2>
+        <button class="sheet-close" data-close aria-label="Close">×</button>
+      </div>
+      <div class="sheet-body">
+        <p class="sheet-hint">Added to spending history only — it won’t appear on the home card or change your current balance.</p>
+        <label class="field"><span>Name</span><input id="hName" autocomplete="off" placeholder="e.g. Coffee"></label>
+        <div class="field-grid two">
+          <label class="field"><span>Amount</span><input id="hAmount" type="number" step="0.01" inputmode="decimal" placeholder="-12.50"></label>
+          <label class="field"><span>Time</span><input id="hTime" type="time"></label>
+        </div>
+        <label class="field"><span>Day</span><select id="hDay"></select></label>
+        <button class="primary wide" id="histSubmit">Add to history</button>
       </div>
     </div>
 

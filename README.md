@@ -38,8 +38,9 @@ It opens full-screen with no browser chrome, works offline after the first load,
 **Transactions screen** (tap `See all`, `Search`, `Accounts`, `Details`, or the analytics icon)
 - Black "Current balance" layout from the second reference image.
 - Upcoming card, Today / Yesterday groups with computed totals.
-- Date labels are relative to the real current date: the reference payments are anchored to 7 November 2026, so they read "Yesterday" on the 8th and "Nov 7" from the 9th onward.
-- Live search filtering.
+- Day totals are always neutral grey; individual incoming amounts stay green.
+- Date labels are computed from each group's date, so "Today" / "Yesterday" stay correct.
+- Tap the **+** button in the header to add a transaction to any older history day. History-only entries never appear on the home card and don't change the current balance.
 - Tap any row for a transaction detail sheet (category, account, status, actions).
 
 **Customisable numbers** (tap the avatar, the balance, or `More`; or press `E`)
