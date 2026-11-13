@@ -88,11 +88,19 @@
     if (mini) mini.textContent = D.fmt(n);
   }
 
+  function paintWealth(n) {
+    const total = $('#wealthTotal');
+    if (total) total.textContent = D.fmt(n);
+    const cash = $('[data-wealth="cash"] .wval');
+    if (cash) cash.textContent = D.fmt(n);
+  }
+
   function paintBalance(n) {
     shownBalance = Number(n) || 0;
     const hero = $('#heroBalance');
     if (hero) hero.innerHTML = balanceHTML(shownBalance);
     paintDetailBalance(shownBalance);
+    paintWealth(shownBalance);
     const addCur = $('#addCur');
     if (addCur) addCur.textContent = D.state.currency;
   }
@@ -177,14 +185,14 @@
     const box = $('#wealthRows');
     if (!box) return;
     const total = $('#wealthTotal');
-    if (total) total.textContent = D.WEALTH.total + ' ' + D.state.currency;
+    if (total) total.textContent = D.fmt(D.state.balance);
     box.innerHTML = D.WEALTH.rows.map((r) => `<button class="wrow" data-wealth="${esc(r.key)}">
       <span class="wic wic-${esc(r.key)}">${S[r.icon] || ''}</span>
       <span class="wmain">
         <span class="wname">${esc(r.name)}</span>
         ${r.sub ? `<span class="wsub">${esc(r.sub)}</span>` : ''}
       </span>
-      ${r.value ? `<span class="wval">${esc(r.value)}</span>` : `<span class="wchev">${S.chevron}</span>`}
+      ${r.value || r.key === 'cash' ? `<span class="wval">${esc(r.key === 'cash' ? D.fmt(D.state.balance) : r.value)}</span>` : `<span class="wchev">${S.chevron}</span>`}
     </button>`).join('');
   }
 

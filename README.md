@@ -45,6 +45,7 @@ It opens full-screen with no browser chrome, works offline after the first load,
 
 **Customisable numbers** (tap the avatar, the balance, or `More`; or press `E`)
 - Initials, currency (lei / € / $ / £), balance, IBAN.
+- The balance also drives **Total wealth** and the Cash row; tap either number to edit it.
 - Every transaction name and amount, with add/delete.
 - Changes update the home and transaction screens live and persist in `localStorage`.
 - `Reset demo` restores the reference data.

@@ -399,7 +399,11 @@
     const card = e.target.closest('[data-card]');
     if (card) { toast('Card — demo only'); return; }
     const wealth = e.target.closest('[data-wealth]');
-    if (wealth) { toast('Wealth — demo only'); return; }
+    if (wealth) {
+      if (wealth.dataset.wealth === 'cash') openEditor('balance');
+      else toast('Wealth — demo only');
+      return;
+    }
     if (e.target.closest('#schedLink')) { toast('Scheduled payments — demo only'); return; }
     if (e.target.closest('[data-act]')) { toast(e.target.closest('[data-act]').dataset.act + ' — demo only'); return; }
     if (e.target.closest('[data-close]')) { closeSheets(); return; }
@@ -417,7 +421,11 @@
     setTimeout(() => { card.remove(); }, 240);
   });
   $('#cardsSeeAll').addEventListener('click', () => toast('All cards — demo only'));
-  $('#wealthHead').addEventListener('click', () => toast('Total wealth — demo only'));
+  $('#wealthHead').addEventListener('click', () => openEditor('balance'));
+  $('#wealthTotal').addEventListener('click', () => openEditor('balance'));
+  $('#wealthTotal').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEditor('balance'); }
+  });
   $('#spentSeeAll').addEventListener('click', () => toast('Spending analytics — demo only'));
 
   /* ============ events: editor fields ============ */
