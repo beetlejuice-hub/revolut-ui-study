@@ -31,21 +31,20 @@ It opens full-screen with no browser chrome, works offline after the first load,
 - Blue gradient hero with `Personal · RON`, balance, IBAN and Accounts pill.
 - Add money / Move / Details / More quick actions.
 - Swipeable promo carousel with dots and dismissible cards.
-- Upcoming payment, transaction list and a dismissible "Competitive loans." offer.
+- The three latest payments and a dismissible "Competitive loans." offer.
 - Floating blurred tab bar (Home, Credit, Invest, Payments, Crypto, RevPoints).
 - Scroll animation: the hero fades and collapses as the top bar becomes solid, then the list scrolls underneath.
 
 **Transactions screen** (tap `See all`, `Search`, `Accounts`, `Details`, or the analytics icon)
 - Black "Current balance" layout from the second reference image.
-- Upcoming card, Today / Yesterday groups with computed totals.
+- Today / Yesterday groups with computed totals, merged with the home payments by date.
 - Day totals are always neutral grey; individual incoming amounts stay green.
 - Date labels are computed from each group's date, so "Today" / "Yesterday" stay correct.
-- Tap the **+** button in the header to add a transaction to any older history day. History-only entries never appear on the home card and don't change the current balance.
+- Tap the **+** button in the header to add a transaction on any custom date and pick its icon. A new day group is created automatically. History-only entries never appear on the home card and don't change the current balance.
 - Tap any row for a transaction detail sheet (category, account, status, actions).
 
 **Customisable numbers** (tap the avatar, the balance, or `More`; or press `E`)
 - Initials, currency (lei / € / $ / £), balance, IBAN.
-- Upcoming payment name + amount.
 - Every transaction name and amount, with add/delete.
 - Changes update the home and transaction screens live and persist in `localStorage`.
 - `Reset demo` restores the reference data.
@@ -86,7 +85,7 @@ icons/                app icons (192, 512, maskable, Apple touch)
 ## Notes
 
 - The Revolut "R" mark in the tab bar uses the Simple Icons path (CC0). Inter is licensed under the SIL Open Font License.
-- Merchant icons are drawn with CSS/SVG as generic stand-ins (Apple logo, fork, PROFI tag, aircash wordmark, etc.), not official brand assets.
+- Merchant icons are cropped from the supplied reference screenshots and used only to identify the merchants in this non-commercial study; all trademarks belong to their owners.
 - The layout is designed at 393 × 852 and scales down as one piece on desktop; below 760 px it goes full-bleed like a real phone.
 - When installed, the fake status bar is hidden and the layout respects the phone's safe areas (notch and home indicator).
 - Everything is local and works offline after the first load.

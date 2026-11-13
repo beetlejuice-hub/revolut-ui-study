@@ -16,19 +16,12 @@
     balance: 72.83,
     currency: 'lei',
     iban: 'RO09 REVO 0000 1112 7043 6279',
-    upcoming: {
-      name: 'Apple',
-      amount: -4.99,
-      due: 'Due in 2 days',
-      detail: 'Monthly, next on Nov 10.',
-      icon: 'apple'
-    },
     /* The three most recent payments — shown on the home card and at the
        top of the history. Editable in the demo sheet. */
     transactions: [
-      { id: 't1', name: 'Incze Hunor', amount: -50, date: RECENT_DATE, at: '20:51', icon: 'initials', badge: 'out', cat: 'Transfer' },
-      { id: 't2', name: 'Hungaro Residence', amount: -87, date: RECENT_DATE, at: '17:47', icon: 'dining', cat: 'Dining' },
-      { id: 't3', name: 'Málna by Lengyel László Levente', amount: -33, date: RECENT_DATE, at: '15:07', icon: 'malna', cat: 'Desserts' }
+      { id: 't1', name: 'Kedves Csenge 💕', amount: -20, date: '2026-11-13', at: '11:24', icon: 'initials', badge: 'out', cat: 'Transfer' },
+      { id: 't2', name: 'Ler Potato Bar', amount: -29, date: '2026-11-12', at: '20:34', icon: 'ler', cat: 'Dining' },
+      { id: 't3', name: 'Petrom', amount: -201.27, date: '2026-11-12', at: '17:22', icon: 'petrom', cat: 'Fuel' }
     ],
     /* Extra rows that belong only to the older spending-history days.
        They never appear on the home card. */
@@ -40,18 +33,10 @@
      carries an ISO date so the "Today" / "Yesterday" labels stay correct. */
   const HISTORY = [
     {
-      key: 'nov13', label: 'November 13.', date: '2026-11-13', month: '2026-11',
-      rows: [
-        { id: 'h-csenge-3', name: 'Kedves Csenge 💕', amount: -20, time: '11:24', icon: 'initials', badge: 'out', cat: 'Transfer' }
-      ]
-    },
-    {
       key: 'nov12', label: 'November 12.', date: '2026-11-12', month: '2026-11',
       rows: [
-        { id: 'h-ler-2', name: 'Ler Potato Bar', amount: -29, time: '20:34', icon: 'ler', cat: 'Dining' },
-        { id: 'h-petrom-2', name: 'Petrom', amount: -201.27, time: '17:22', icon: 'petrom', cat: 'Fuel' },
         { id: 'h-lidl-3', name: 'Lidl', amount: -68.64, time: '15:32', icon: 'lidl', cat: 'Groceries' },
-        { id: 'h-sazy', name: 'Sazy', amount: -40, time: '15:14', icon: 'initials', cat: 'Dining' },
+        { id: 'h-sazy', name: 'Sazy', amount: -40, time: '15:14', icon: 'sazy', cat: 'Dining' },
         { id: 'h-anyu-2', name: 'Anyu', amount: 500, time: '14:52', note: 'Tankolás+ vasarlas', icon: 'initials', badge: 'in', cat: 'Transfer' }
       ]
     },
@@ -67,8 +52,8 @@
       key: 'nov10', label: 'November 10.', date: '2026-11-10', month: '2026-11',
       rows: [
         { id: 'h-profi-2', name: 'Profi', amount: -8.73, time: '20:08', icon: 'profi', cat: 'Groceries' },
-        { id: 'h-woodland', name: 'Woodland', amount: -107, time: '19:31', icon: 'initials', cat: 'Dining' },
-        { id: 'h-tabac', name: 'M. Tabac', amount: -25, time: '18:03', icon: 'initials', cat: 'Shopping' },
+        { id: 'h-woodland', name: 'Woodland', amount: -107, time: '19:31', icon: 'woodland', cat: 'Dining' },
+        { id: 'h-tabac', name: 'M. Tabac', amount: -25, time: '18:03', icon: 'tabac', cat: 'Shopping' },
         { id: 'h-anyu-3', name: 'Anyu', amount: 200, time: '15:35', note: 'Kaja', icon: 'initials', badge: 'in', cat: 'Transfer' }
       ]
     },
@@ -200,16 +185,46 @@
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[c]));
 
-  const HISTORY_KEYS = HISTORY.map((g) => g.key);
+  const HISTORY_BY_KEY = {};
+  HISTORY.forEach((g) => { HISTORY_BY_KEY[g.key] = g; });
+  /* Group keys that existed in earlier builds but no longer have a static
+     group, so custom rows saved against them are not lost. */
+  const LEGACY_GROUP_DATES = { nov13: '2026-11-13' };
+
+  /* Icons available in the "add history transaction" picker. */
+  const ICON_CHOICES = [
+    { key: 'initials', label: 'Initials' },
+    { key: 'ler', label: 'Ler Potato Bar' },
+    { key: 'petrom', label: 'Petrom' },
+    { key: 'lidl', label: 'Lidl' },
+    { key: 'sazy', label: 'Sazy' },
+    { key: 'profi', label: 'Profi' },
+    { key: 'tabac', label: 'M. Tabac' },
+    { key: 'woodland', label: 'Woodland' },
+    { key: 'claude', label: 'Claude' },
+    { key: 'apple', label: 'Apple' },
+    { key: 'kaufland', label: 'Kaufland' },
+    { key: 'hamm', label: 'Hamm' },
+    { key: 'eventum', label: 'Eventum Box' },
+    { key: 'mag', label: 'Mag' },
+    { key: 'anthropic', label: 'Anthropic' },
+    { key: 'dining', label: 'Dining' },
+    { key: 'malna', label: 'Málna' },
+    { key: 'aircash', label: 'Aircash' },
+    { key: 'netflix', label: 'Netflix' },
+    { key: 'bolt', label: 'Bolt' }
+  ];
 
   function normalizeHistoryExtra(t) {
     if (!t || typeof t !== 'object') return null;
-    const group = HISTORY_KEYS.indexOf(String(t.group || '')) !== -1 ? String(t.group) : '';
-    if (!group) return null;
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(String(t.date || ''))
+      ? String(t.date)
+      : ((HISTORY_BY_KEY[String(t.group || '')] || {}).date || LEGACY_GROUP_DATES[String(t.group || '')]);
+    if (!date) return null;
     const amount = Number(t.amount);
     return {
       id: String(t.id || ('hx' + Math.random().toString(36).slice(2, 9))),
-      group,
+      date,
       name: String(t.name || 'Payment').slice(0, 80),
       amount: isFinite(amount) ? Math.round(amount * 100) / 100 : 0,
       time: /^\d{2}:\d{2}$/.test(String(t.time || '')) ? String(t.time) : '12:00',
@@ -220,6 +235,16 @@
     };
   }
 
+  /* Earlier builds seeded the home card with three demo rows. Replace those
+     with the latest reference payments once, while leaving any user-edited
+     data untouched. */
+  function isLegacyHome(list) {
+    const ids = ['t1', 't2', 't3'];
+    const names = ['Incze Hunor', 'Hungaro Residence', 'Málna by Lengyel László Levente'];
+    if (!Array.isArray(list) || list.length !== 3) return false;
+    return list.every((t, i) => t && t.id === ids[i] && String(t.name || '') === names[i]);
+  }
+
   function load() {
     try {
       const raw = localStorage.getItem(KEY);
@@ -227,10 +252,11 @@
       const parsed = JSON.parse(raw);
       const base = clone(DEFAULTS);
       if (!parsed || typeof parsed !== 'object') return base;
-      const merged = Object.assign(base, parsed);
+      const merged = Object.assign({}, base, parsed);
       if (typeof merged.balance !== 'number' || !isFinite(merged.balance)) merged.balance = base.balance;
       if (!Array.isArray(merged.transactions)) merged.transactions = base.transactions;
-      if (!merged.upcoming || typeof merged.upcoming !== 'object') merged.upcoming = base.upcoming;
+      else if (isLegacyHome(merged.transactions)) merged.transactions = clone(base.transactions);
+      delete merged.upcoming;
       merged.name = String(merged.name || base.name);
       merged.transactions = merged.transactions.filter((t) => t && typeof t === 'object').map((t) => {
         const date = /^\d{4}-\d{2}-\d{2}$/.test(String(t.date || '')) ? String(t.date) : RECENT_DATE;
@@ -362,33 +388,50 @@
     return (items || []).reduce((a, t) => a + (Number(t.amount) || 0), 0);
   }
 
-  /* All groups in display order. The top group mirrors the editable home rows. */
+  /* All groups in display order, merged by ISO date. The editable home rows
+     join the same day groups as the reference history, and custom history
+     entries create a group automatically when their date is new. */
   function historyGroups() {
-    const recent = state.transactions.map((t) => Object.assign({}, t, {
-      time: t.at || shortTime(t.time)
-    }));
-    const recentDate = (state.transactions[0] && state.transactions[0].date) || RECENT_DATE;
-    const extras = (state.historyExtra || []).filter((t) => t && HISTORY_KEYS.indexOf(t.group) !== -1);
-    const all = [{
-      key: 'recent',
-      label: groupLabel(recentDate),
-      date: recentDate,
-      month: recentDate.slice(0, 7),
-      rows: recent
-    }].concat(HISTORY.map((g) => {
-      const added = extras
-        .filter((t) => t.group === g.key)
-        .map((t) => Object.assign({}, t));
-      return Object.assign({}, g, {
-        label: groupLabel(g.date) || g.label,
-        rows: g.rows.concat(added).sort((a, b) => String(b.time || '').localeCompare(String(a.time || '')))
-      });
-    }));
-    return all.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    const byDate = new Map();
+
+    function groupFor(dateISO) {
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(String(dateISO || '')) ? String(dateISO) : RECENT_DATE;
+      if (!byDate.has(date)) {
+        byDate.set(date, {
+          key: 'd-' + date,
+          date,
+          label: groupLabel(date),
+          month: date.slice(0, 7),
+          rows: []
+        });
+      }
+      return byDate.get(date);
+    }
+
+    HISTORY.forEach((g) => {
+      const group = groupFor(g.date);
+      g.rows.forEach((r) => group.rows.push(Object.assign({}, r)));
+    });
+
+    state.transactions.forEach((t) => {
+      const group = groupFor(t.date);
+      group.rows.push(Object.assign({}, t, { time: t.at || shortTime(t.time) }));
+    });
+
+    (state.historyExtra || []).forEach((t) => {
+      if (!t || !t.date) return;
+      const group = groupFor(t.date);
+      group.rows.push(Object.assign({}, t));
+    });
+
+    const groups = Array.from(byDate.values());
+    groups.forEach((g) => {
+      g.rows.sort((a, b) => String(b.time || '').localeCompare(String(a.time || '')));
+    });
+    return groups.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
   }
 
   function findTx(id) {
-    if (id === 'upcoming') return null;
     const own = state.transactions.find((x) => x.id === id);
     if (own) return own;
     const extra = (state.historyExtra || []).find((x) => x.id === id);
@@ -401,7 +444,7 @@
   }
 
   window.DEMO = {
-    KEY, DEFAULTS, HISTORY, MONTHS, CARDS, WEALTH, SPENT, PROMOS, CUR, state, save, reset,
+    KEY, DEFAULTS, HISTORY, MONTHS, CARDS, WEALTH, SPENT, PROMOS, CUR, ICON_CHOICES, state, save, reset,
     RECENT_DATE, moneyParts, fmt, fmtSigned, initialsOf, uid, shortTime, sum, esc, clone,
     isoDate, whenLabel, groupLabel, txWhen, nowTime,
     historyGroups, findTx

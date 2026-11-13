@@ -242,20 +242,6 @@
   overflow:hidden;
   animation:rise .7s .18s cubic-bezier(.2,.8,.2,1) both;
 }
-.upcoming{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  width:calc(100% - 14px);
-  margin:0 7px;
-  padding:12px 10px;
-  background:rgba(255,255,255,.06);
-  border-radius:18px;
-  text-align:left;
-  color:#fff;
-  transition:background .18s ease;
-}
-.upcoming:active{background:rgba(255,255,255,.1)}
 .trow{
   display:flex;
   align-items:center;
@@ -319,15 +305,19 @@
 .ic-logo{background:#fff}
 .ic-logo img{width:100%;height:100%;object-fit:contain;display:block}
 .ic-logo.lg-plain{background:transparent}
-.ic-logo.lg-claude{background:#fff;padding:5px}
+.ic-logo.lg-claude{background:#fff;padding:0}
 .ic-logo.lg-anthropic{background:#fff;padding:4px}
-.ic-logo.lg-profi{background:#fff;padding:8px 5px}
+.ic-logo.lg-profi{background:#fff;padding:0}
+.ic-logo.lg-ler{background:#0b0b0f;padding:0}
+.ic-logo.lg-petrom{background:#fff;padding:0}
+.ic-logo.lg-lidl{background:#ff0;padding:0}
+.ic-logo.lg-sazy{background:#fff;padding:0}
+.ic-logo.lg-tabac{background:#fff;padding:0}
+.ic-logo.lg-woodland{background:#0b0b0f;padding:0}
 .ic-logo.lg-eventum{background:#241238;padding:10px 5px}
 .ic-logo.lg-hamm{background:#fff;padding:4px}
 .ic-hamm{background:#5b5bd6;color:#fff}
 .ic-mag{background:#3bbf4e;color:#fff}
-.ic-ler{background:#0b0b0f}
-.ler-txt{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:16px;color:#e8c87a;letter-spacing:-.02em}
 
 .badge-out{
   position:absolute;
@@ -342,6 +332,19 @@
   z-index:2;
 }
 .badge-out svg{width:10px;height:10px}
+.badge-in{
+  position:absolute;
+  left:-2px;bottom:-1px;
+  width:18px;height:18px;
+  border-radius:50%;
+  background:#fff;
+  color:#0b0b0f;
+  display:grid;
+  place-items:center;
+  box-shadow:0 0 0 2px rgba(9,9,15,.6);
+  z-index:2;
+}
+.badge-in svg{width:10px;height:10px}
 
 /* ============ section headers ============ */
 .sec-head{

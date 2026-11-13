@@ -91,7 +91,6 @@
         </section>
 
         <section class="txcard">
-          <div id="upcomingSlot"></div>
           <div id="txList"></div>
           <button class="seeall" id="seeAll">See all</button>
         </section>
@@ -265,13 +264,6 @@
         <label class="field"><span>IBAN</span><input id="fIban" autocomplete="off"></label>
 
         <div class="sheet-sep"></div>
-        <div class="sheet-sub">Upcoming payment</div>
-        <div class="field-grid two">
-          <label class="field"><span>Name</span><input id="fUpName" autocomplete="off"></label>
-          <label class="field"><span>Amount</span><input id="fUpAmount" type="number" step="0.01" inputmode="decimal"></label>
-        </div>
-
-        <div class="sheet-sep"></div>
         <div class="sheet-sub-row"><div class="sheet-sub">Recent payments</div><span class="sheet-count" id="txCount"></span></div>
         <div class="tx-editor" id="txEditor"></div>
         <button class="add-tx" id="addTx">+ Add transaction</button>
@@ -319,7 +311,9 @@
           <label class="field"><span>Amount</span><input id="hAmount" type="number" step="0.01" inputmode="decimal" placeholder="-12.50"></label>
           <label class="field"><span>Time</span><input id="hTime" type="time"></label>
         </div>
-        <label class="field"><span>Day</span><select id="hDay"></select></label>
+        <label class="field"><span>Date</span><input id="hDate" type="date"></label>
+        <div class="field-label">Icon</div>
+        <div class="icon-picker" id="hIcons"></div>
         <button class="primary wide" id="histSubmit">Add to history</button>
       </div>
     </div>

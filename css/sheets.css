@@ -93,6 +93,27 @@
 .field-grid.two{grid-template-columns:1.5fr 1fr}
 .field-grid .field{margin-bottom:0}
 .field-grid + .field{margin-top:12px}
+.field-label{font-size:12px;font-weight:500;color:#8b8b93;letter-spacing:.01em;margin:2px 0 8px}
+
+.icon-picker{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  margin-bottom:16px;
+}
+.icon-choice{
+  display:grid;
+  place-items:center;
+  aspect-ratio:1;
+  border-radius:50%;
+  background:#1b1b20;
+  border:1px solid transparent;
+  transition:border-color .16s ease,background .16s ease,transform .16s ease;
+}
+.icon-choice:active{transform:scale(.94)}
+.icon-choice.on{border-color:#4d5dff;background:#22222a}
+.icon-choice .ic{width:34px;height:34px;font-size:11px}
+.icon-choice .ic-logo img{transform:scale(.96)}
 
 .tx-editor{display:flex;flex-direction:column;gap:8px}
 .edit-row{

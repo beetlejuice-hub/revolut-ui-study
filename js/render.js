@@ -9,48 +9,69 @@
   let shownBalance = 0;
   let balanceRaf = null;
 
-  /* Real brand marks. Files live in img/logos and are only used for this
-     educational UI study — all trademarks belong to their owners. */
+  /* Exact merchant marks cropped from the reference screenshots, plus a few
+     supporting brand assets. Used only for this educational UI study — all
+     trademarks belong to their owners. */
   const LOGOS = {
-    lidl: { src: 'img/logos/lidl-google.png', cls: 'lg-lidl' },
+    lidl: { src: 'img/logos/lidl-crop.png', cls: 'lg-lidl' },
     kaufland: { src: 'img/logos/kaufland-google.png', cls: 'lg-kaufland' },
-    claude: { src: 'img/logos/claude-symbol.svg', cls: 'lg-claude' },
+    claude: { src: 'img/logos/claude-crop.png', cls: 'lg-claude' },
     anthropic: { src: 'img/logos/anthropic-google.png', cls: 'lg-anthropic' },
     netflix: { src: 'img/logos/netflix-google.png', cls: 'lg-netflix' },
     bolt: { src: 'img/logos/bolt-google.png', cls: 'lg-bolt' },
-    petrom: { src: 'img/logos/petrom-google.png', cls: 'lg-petrom' },
-    profi: { src: 'img/logos/profi-512.png', cls: 'lg-profi' },
+    petrom: { src: 'img/logos/petrom-crop.png', cls: 'lg-petrom' },
+    profi: { src: 'img/logos/profi-crop.png', cls: 'lg-profi' },
     eventum: { src: 'img/logos/eventum.webp', cls: 'lg-eventum' },
     hamm: { src: 'img/logos/hamm-512.png', cls: 'lg-hamm' },
-    aircash: { src: 'img/logos/aircash-google.png', cls: 'lg-aircash' }
+    aircash: { src: 'img/logos/aircash-google.png', cls: 'lg-aircash' },
+    ler: { src: 'img/logos/ler-crop.png', cls: 'lg-ler' },
+    sazy: { src: 'img/logos/sazy.png', cls: 'lg-sazy' },
+    tabac: { src: 'img/logos/tabac.png', cls: 'lg-tabac' },
+    woodland: { src: 'img/logos/woodland.png', cls: 'lg-woodland' }
   };
 
   /* ---------- icons ---------- */
+  function badgeHTML(badge) {
+    if (badge === 'out') return `<span class="badge-out">${S.arrow}</span>`;
+    if (badge === 'in') return `<span class="badge-in">${S.arrowLeft}</span>`;
+    return '';
+  }
+
   function txIcon(tx) {
     const key = (tx && tx.icon) || 'initials';
+    const badge = badgeHTML(tx && tx.badge);
+    let cls = 'ic';
+    let inner = '';
     if (key === 'initials') {
-      return `<span class="ic ic-initials">${esc(D.initialsOf(tx.name))}${tx.badge === 'out' ? `<span class="badge-out">${S.arrow}</span>` : ''}</span>`;
+      cls += ' ic-initials';
+      inner = esc(D.initialsOf(tx.name));
+    } else if (key === 'mag') {
+      cls += ' ic-mag';
+      inner = S.basket;
+    } else if (key === 'dining') {
+      cls += ' ic-dining';
+      inner = S.fork;
+    } else if (key === 'malna') {
+      cls += ' ic-malna';
+      inner = S.malna;
+    } else if (key === 'apple') {
+      cls += ' ic-apple';
+      inner = S.apple;
+    } else if (LOGOS[key]) {
+      cls += ' ic-logo ' + LOGOS[key].cls;
+      inner = `<img src="${LOGOS[key].src}" alt="" loading="lazy" decoding="async">`;
+    } else {
+      cls += ' ic-initials';
+      inner = esc(D.initialsOf(tx.name));
     }
-    if (key === 'ler') {
-      return `<span class="ic ic-ler"><span class="ler-txt">Ler</span></span>`;
-    }
-    if (key === 'mag') {
-      return `<span class="ic ic-mag">${S.basket}</span>`;
-    }
-    if (key === 'dining') {
-      return `<span class="ic ic-dining">${S.fork}</span>`;
-    }
-    if (key === 'malna') {
-      return `<span class="ic ic-malna">${S.malna}</span>`;
-    }
-    if (key === 'apple') {
-      return `<span class="ic ic-apple">${S.apple}</span>`;
-    }
-    const logo = LOGOS[key];
-    if (logo) {
-      return `<span class="ic ic-logo ${logo.cls}"><img src="${logo.src}" alt="" loading="lazy" decoding="async"></span>`;
-    }
-    return `<span class="ic ic-initials">${esc(D.initialsOf(tx.name))}</span>`;
+    return `<span class="${cls}">${inner}${badge}</span>`;
+  }
+
+  function iconPickerHTML(selected) {
+    return D.ICON_CHOICES.map((c) => {
+      const on = c.key === selected ? ' on' : '';
+      return `<button type="button" class="icon-choice${on}" data-icon="${esc(c.key)}" aria-label="${esc(c.label)}" title="${esc(c.label)}">${txIcon({ name: 'A B', icon: c.key })}</button>`;
+    }).join('');
   }
 
   /* ---------- balance ---------- */
@@ -99,18 +120,6 @@
   }
 
   /* ---------- home ---------- */
-  function upcomingRow() {
-    const u = D.state.upcoming;
-    return `<button class="upcoming" data-tx="upcoming">
-      ${txIcon({ name: u.name, icon: u.icon || 'apple' })}
-      <span class="tmain">
-        <span class="tname">1 upcoming payment</span>
-        <span class="tsub">${esc(u.due)}</span>
-      </span>
-      <span class="tamt">${D.fmt(u.amount)}</span>
-    </button>`;
-  }
-
   function homeRow(t) {
     return `<button class="trow" data-tx="${t.id}">
       ${txIcon(t)}
@@ -132,9 +141,6 @@
     if (kicker) kicker.textContent = 'Personal · ' + (D.CUR[s.currency] || s.currency);
     const iban = $('#ibanText');
     if (iban) iban.textContent = s.iban;
-
-    const up = $('#upcomingSlot');
-    if (up) up.innerHTML = upcomingRow();
 
     const list = $('#txList');
     if (list) list.innerHTML = s.transactions.slice(0, 3).map(homeRow).join('');
@@ -254,7 +260,7 @@
     const rows = g.rows.length
       ? g.rows.map(detailRow).join('')
       : `<div class="dempty">No transactions in ${esc(g.label)}.</div>`;
-    return `<section class="dgroup" data-key="${esc(g.key)}" data-month="${esc(g.month)}" data-label="${esc(g.label)}" data-balance="${Number(g.balance) || 0}">
+    return `<section class="dgroup" data-key="${esc(g.key)}" data-date="${esc(g.date || '')}" data-month="${esc(g.month)}" data-label="${esc(g.label)}" data-balance="${Number(g.balance) || 0}">
       <div class="dgroup-head"><h2>${esc(g.label)}</h2>${totalHTML}</div>
       <div class="dcard">${rows}</div>
     </section>`;
@@ -299,8 +305,6 @@
     set('fBalance', s.balance);
     set('fCurrency', s.currency);
     set('fIban', s.iban);
-    set('fUpName', s.upcoming.name);
-    set('fUpAmount', s.upcoming.amount);
     const count = $('#txCount');
     if (count) count.textContent = s.transactions.length + (s.transactions.length === 1 ? ' item' : ' items');
     const box = $('#txEditor');
@@ -321,7 +325,7 @@
   }
 
   window.RENDER = {
-    txIcon, balanceHTML, paintBalance, paintDetailBalance, animateBalance, stopBalance,
+    txIcon, iconPickerHTML, balanceHTML, paintBalance, paintDetailBalance, animateBalance, stopBalance,
     renderHome, renderCards, renderWealth, renderSpent, renderDetail, renderPromos,
     renderMonthPills, renderEditor, tickClock, detailRow, groupHTML
   };

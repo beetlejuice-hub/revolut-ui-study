@@ -227,13 +227,7 @@
 
   /* ============ transaction sheet ============ */
   function openTx(id) {
-    let t;
-    if (id === 'upcoming') {
-      const u = D.state.upcoming;
-      t = { name: u.name, amount: u.amount, time: u.detail, cat: 'Subscription', icon: u.icon || 'apple' };
-    } else {
-      t = D.findTx(id);
-    }
+    const t = D.findTx(id);
     if (!t) return;
     const amt = t.hideAmount ? '—' : D.fmtSigned(t.amount);
     const whenTxt = t.date ? D.txWhen(t) : (t.time || t.note || t.alt || '');
@@ -257,20 +251,24 @@
   }
 
   /* ============ history-only transaction ============ */
+  let historyIcon = 'initials';
+
+  function paintHistoryIcons() {
+    const box = $('#hIcons');
+    if (box) box.innerHTML = R.iconPickerHTML(historyIcon);
+  }
+
   function openHistorySheet() {
-    const sel = $('#hDay');
-    if (sel) {
-      sel.innerHTML = D.HISTORY.map((g) => {
-        const label = D.groupLabel(g.date) || g.label;
-        return `<option value="${D.esc(g.key)}">${D.esc(label)}</option>`;
-      }).join('');
-    }
+    historyIcon = 'initials';
+    paintHistoryIcons();
     const name = $('#hName');
     if (name) name.value = '';
     const amount = $('#hAmount');
     if (amount) amount.value = '';
     const time = $('#hTime');
     if (time) time.value = D.nowTime();
+    const date = $('#hDate');
+    if (date) date.value = D.isoDate(new Date());
     openSheet($('#histSheet'));
     setTimeout(() => { if (name) name.focus({ preventScroll: true }); }, 380);
   }
@@ -465,18 +463,6 @@
     saveAndPaint();
   });
 
-  $('#fUpName').addEventListener('input', (e) => {
-    D.state.upcoming.name = e.target.value || 'Payment';
-    saveAndPaint();
-  });
-
-  $('#fUpAmount').addEventListener('input', (e) => {
-    const v = parseFloat(e.target.value);
-    if (!isFinite(v)) return;
-    D.state.upcoming.amount = Math.round(v * 100) / 100;
-    saveAndPaint();
-  });
-
   $('#txEditor').addEventListener('input', (e) => {
     const row = e.target.closest('.edit-row');
     if (!row) return;
@@ -520,25 +506,31 @@
   /* ============ events: history-only transactions ============ */
   $('#addHistoryBtn').addEventListener('click', openHistorySheet);
 
+  $('#hIcons').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-icon]');
+    if (!b) return;
+    historyIcon = b.dataset.icon;
+    $$('#hIcons .icon-choice').forEach((x) => x.classList.toggle('on', x === b));
+  });
+
   $('#histSubmit').addEventListener('click', () => {
     const name = ($('#hName').value || '').trim() || 'Payment';
     const amount = Math.round((parseFloat($('#hAmount').value) || 0) * 100) / 100;
     const time = /^\d{2}:\d{2}$/.test($('#hTime').value) ? $('#hTime').value : D.nowTime();
-    const group = $('#hDay').value;
-    if (!group) { toast('Pick a day'); return; }
+    const picked = $('#hDate').value;
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(picked) ? picked : D.isoDate(new Date());
     if (!amount) { toast('Enter an amount'); return; }
     D.state.historyExtra = D.state.historyExtra || [];
     D.state.historyExtra.push({
-      id: D.uid(), group, name, amount, time,
-      icon: 'initials', badge: amount < 0 ? 'out' : 'in', cat: 'Payment'
+      id: D.uid(), date, name, amount, time,
+      icon: historyIcon, badge: amount < 0 ? 'out' : 'in', cat: 'Payment'
     });
     D.save();
     refreshDetail();
     closeSheets();
-    const day = D.HISTORY.find((g) => g.key === group);
-    toast('Added to ' + (day ? (D.groupLabel(day.date) || day.label) : 'history'));
+    toast('Added to ' + D.groupLabel(date));
     setTimeout(() => {
-      const el = document.querySelector(`#detailBody .dgroup[data-key="${group}"]`);
+      const el = document.querySelector(`#detailBody .dgroup[data-date="${date}"]`);
       if (!el) return;
       detailHead.classList.add('compact');
       const h = collapsedHeadHeight();
