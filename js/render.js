@@ -154,7 +154,14 @@
     if (iban) iban.textContent = s.iban;
 
     const list = $('#txList');
-    if (list) list.innerHTML = s.transactions.slice(0, 3).map(homeRow).join('');
+    if (list) {
+      const recent = s.transactions.slice().sort((a, b) => {
+        const byDate = String(b.date || '').localeCompare(String(a.date || ''));
+        if (byDate) return byDate;
+        return String(b.at || '').localeCompare(String(a.at || ''));
+      });
+      list.innerHTML = recent.slice(0, 3).map(homeRow).join('');
+    }
 
     renderCards();
     renderWealth();
