@@ -200,7 +200,9 @@
 
 /* ============ transaction detail sheet ============ */
 #txSheet .sheet-body{padding-top:4px;text-align:center}
-.txs-icon{display:flex;justify-content:center;margin:6px 0 14px}
+.txs-icon{display:flex;justify-content:center;margin:6px 0 14px;transition:transform .18s ease}
+.txs-icon[role="button"]{cursor:pointer}
+.txs-icon[role="button"]:active{transform:scale(.94)}
 .txs-icon .ic{width:64px;height:64px;font-size:20px}
 .txs-icon .ic svg{transform:scale(1.15)}
 .txs-icon .ic-logo img{transform:scale(1.08)}

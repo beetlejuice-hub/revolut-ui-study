@@ -267,7 +267,7 @@
     const whenTxt = t.date ? D.whenLabel(t.date, t.at || t.time) : (t.time || t.note || t.alt || '');
     $('#txSheetBody').innerHTML = `
       <button class="sheet-close" data-close style="position:absolute;top:12px;right:16px" aria-label="Close">×</button>
-      <div class="txs-icon" id="txIconPreview">${R.txIcon(t)}</div>
+      <div class="txs-icon" id="txIconPreview" role="button" tabindex="0" title="Change icon" aria-label="Change transaction icon">${R.txIcon(t)}</div>
       <div class="txs-amt${t.amount > 0 ? ' positive' : ''}" id="txAmtPreview">${amt}</div>
       <div class="txs-name" id="txNamePreview">${D.esc(t.name)}</div>
       <div class="txs-time" id="txTimePreview">${D.esc(whenTxt)} · Completed</div>
@@ -291,6 +291,17 @@
   }
 
   $('#txSheetBody').addEventListener('click', (e) => {
+    const preview = e.target.closest('#txIconPreview');
+    if (preview) {
+      const body = $('#txSheetBody');
+      const picker = $('#txIcons');
+      if (body && picker) {
+        const b = body.getBoundingClientRect();
+        const p = picker.getBoundingClientRect();
+        body.scrollTo({ top: body.scrollTop + (p.top - b.top) - 40, behavior: 'smooth' });
+      }
+      return;
+    }
     const iconBtn = e.target.closest('#txIcons [data-icon]');
     if (iconBtn) {
       txSelectedIcon = iconBtn.dataset.icon;
