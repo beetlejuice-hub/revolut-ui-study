@@ -2,26 +2,26 @@
 (function () {
   const KEY = 'revolut-ui-study-v2';
 
-  /* The reference screenshots were taken on 8 November 2026, so the three
-     editable home payments are anchored to 7 November 2026. Their labels are
-     computed against the real current date: "Yesterday" on the 8th, and
-     "Nov 7" from the 9th onwards. */
-  const RECENT_DATE = '2026-11-07';
+  /* The reference screenshots now cover 13–16 November 2026, so the three
+     editable home payments are the latest rows from the newest screenshot.
+     Their labels are computed against the real current date, so "Today" and
+     "Yesterday" stay correct. */
+  const RECENT_DATE = '2026-11-16';
   const MONTH_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const DEFAULTS = {
     name: 'Arnold',
     initials: 'AL',
-    balance: 72.83,
+    balance: 103.58,
     currency: 'lei',
     iban: 'RO09 REVO 0000 1112 7043 6279',
     /* The three most recent payments — shown on the home card and at the
        top of the history. Editable in the demo sheet. */
     transactions: [
-      { id: 't1', name: 'Kedves Csenge 💕', amount: -20, date: '2026-11-13', at: '11:24', icon: 'initials', badge: 'out', cat: 'Transfer' },
-      { id: 't2', name: 'Ler Potato Bar', amount: -29, date: '2026-11-12', at: '20:34', icon: 'ler', cat: 'Dining' },
-      { id: 't3', name: 'Petrom', amount: -201.27, date: '2026-11-12', at: '17:22', icon: 'petrom', cat: 'Fuel' }
+      { id: 't1', name: 'Kedves Csenge 💕', amount: -27, date: '2026-11-16', at: '17:09', icon: 'initials', badge: 'out', cat: 'Transfer' },
+      { id: 't2', name: 'Money added via ··6426', amount: 120, date: '2026-11-16', at: '17:03', icon: 'bank', badge: 'plus', cat: 'Top-up' },
+      { id: 't3', name: 'Kedves Csenge 💕', amount: -10, date: '2026-11-15', at: '07:55', icon: 'initials', badge: 'out', cat: 'Transfer' }
     ],
     /* Extra rows that belong only to the older spending-history days.
        They never appear on the home card. */
@@ -33,8 +33,22 @@
      carries an ISO date so the "Today" / "Yesterday" labels stay correct. */
   const HISTORY = [
     {
+      key: 'nov14', label: 'November 14.', date: '2026-11-14', month: '2026-11',
+      rows: [
+        { id: 'h-csenge-5', name: 'Kedves Csenge 💕', amount: -10, time: '16:16', icon: 'initials', badge: 'out', cat: 'Transfer' }
+      ]
+    },
+    {
+      key: 'nov13', label: 'November 13.', date: '2026-11-13', month: '2026-11',
+      rows: [
+        { id: 'h-csenge-3', name: 'Kedves Csenge 💕', amount: -20, time: '11:24', icon: 'initials', badge: 'out', cat: 'Transfer' }
+      ]
+    },
+    {
       key: 'nov12', label: 'November 12.', date: '2026-11-12', month: '2026-11',
       rows: [
+        { id: 'h-ler-2', name: 'Ler Potato Bar', amount: -29, time: '20:34', icon: 'ler', cat: 'Dining' },
+        { id: 'h-petrom-2', name: 'Petrom', amount: -201.27, time: '17:22', icon: 'petrom', cat: 'Fuel' },
         { id: 'h-lidl-3', name: 'Lidl', amount: -68.64, time: '15:32', icon: 'lidl', cat: 'Groceries' },
         { id: 'h-sazy', name: 'Sazy', amount: -40, time: '15:14', icon: 'sazy', cat: 'Dining' },
         { id: 'h-anyu-2', name: 'Anyu', amount: 500, time: '14:52', note: 'Tankolás+ vasarlas', icon: 'initials', badge: 'in', cat: 'Transfer' }
@@ -194,6 +208,7 @@
   /* Icons available in the "add history transaction" picker. */
   const ICON_CHOICES = [
     { key: 'initials', label: 'Initials' },
+    { key: 'bank', label: 'Bank card' },
     { key: 'ler', label: 'Ler Potato Bar' },
     { key: 'petrom', label: 'Petrom' },
     { key: 'lidl', label: 'Lidl' },
@@ -235,14 +250,30 @@
     };
   }
 
-  /* Earlier builds seeded the home card with three demo rows. Replace those
-     with the latest reference payments once, while leaving any user-edited
-     data untouched. */
+  /* Earlier builds seeded the home card with demo rows. Replace those with
+     the latest reference payments once, while leaving any user-edited data
+     untouched. */
   function isLegacyHome(list) {
     const ids = ['t1', 't2', 't3'];
     const names = ['Incze Hunor', 'Hungaro Residence', 'Málna by Lengyel László Levente'];
     if (!Array.isArray(list) || list.length !== 3) return false;
     return list.every((t, i) => t && t.id === ids[i] && String(t.name || '') === names[i]);
+  }
+
+  /* The three rows shipped just before the 16 November screenshot. */
+  const PREV_HOME = [
+    { id: 't1', name: 'Kedves Csenge 💕', amount: -20, date: '2026-11-13', at: '11:24' },
+    { id: 't2', name: 'Ler Potato Bar', amount: -29, date: '2026-11-12', at: '20:34' },
+    { id: 't3', name: 'Petrom', amount: -201.27, date: '2026-11-12', at: '17:22' }
+  ];
+
+  function isPrevHome(list) {
+    if (!Array.isArray(list) || list.length !== PREV_HOME.length) return false;
+    return list.every((t, i) => {
+      const p = PREV_HOME[i];
+      return t && t.id === p.id && String(t.name || '') === p.name &&
+        Number(t.amount) === p.amount && String(t.date || '') === p.date && String(t.at || '') === p.at;
+    });
   }
 
   function load() {
@@ -254,8 +285,10 @@
       if (!parsed || typeof parsed !== 'object') return base;
       const merged = Object.assign({}, base, parsed);
       if (typeof merged.balance !== 'number' || !isFinite(merged.balance)) merged.balance = base.balance;
+      const staleHome = isLegacyHome(merged.transactions) || isPrevHome(merged.transactions);
       if (!Array.isArray(merged.transactions)) merged.transactions = base.transactions;
-      else if (isLegacyHome(merged.transactions)) merged.transactions = clone(base.transactions);
+      else if (staleHome) merged.transactions = clone(base.transactions);
+      if (staleHome && Number(merged.balance) === 72.83) merged.balance = base.balance;
       delete merged.upcoming;
       merged.name = String(merged.name || base.name);
       merged.transactions = merged.transactions.filter((t) => t && typeof t === 'object').map((t) => {

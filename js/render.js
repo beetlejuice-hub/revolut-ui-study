@@ -27,13 +27,15 @@
     ler: { src: 'img/logos/ler-crop.png', cls: 'lg-ler' },
     sazy: { src: 'img/logos/sazy.png', cls: 'lg-sazy' },
     tabac: { src: 'img/logos/tabac.png', cls: 'lg-tabac' },
-    woodland: { src: 'img/logos/woodland.png', cls: 'lg-woodland' }
+    woodland: { src: 'img/logos/woodland.png', cls: 'lg-woodland' },
+    bank: { src: 'img/logos/bank-card.png', cls: 'lg-bank' }
   };
 
   /* ---------- icons ---------- */
   function badgeHTML(badge) {
     if (badge === 'out') return `<span class="badge-out">${S.arrow}</span>`;
     if (badge === 'in') return `<span class="badge-in">${S.arrowLeft}</span>`;
+    if (badge === 'plus') return `<span class="badge-plus">${S.plus}</span>`;
     return '';
   }
 
@@ -129,13 +131,14 @@
 
   /* ---------- home ---------- */
   function homeRow(t) {
+    const amt = t.amount > 0 ? D.fmtSigned(t.amount) : D.fmt(t.amount);
     return `<button class="trow" data-tx="${t.id}">
       ${txIcon(t)}
       <span class="tmain">
         <span class="tname">${esc(t.name)}</span>
         <span class="tsub">${esc(D.txWhen(t))}</span>
       </span>
-      <span class="tamt">${D.fmt(t.amount)}</span>
+      <span class="tamt${t.amount > 0 ? ' positive' : ''}">${amt}</span>
     </button>`;
   }
 
