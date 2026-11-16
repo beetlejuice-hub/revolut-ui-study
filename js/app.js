@@ -226,29 +226,108 @@
   }
 
   /* ============ transaction sheet ============ */
+  let txEditingId = null;
+  let txSelectedIcon = 'initials';
+
+  function paintTxPreview() {
+    const name = ($('#txName') && $('#txName').value) || 'Payment';
+    const amount = parseFloat($('#txAmount') && $('#txAmount').value) || 0;
+    const icon = txSelectedIcon;
+    const date = ($('#txDate') && $('#txDate').value) || D.RECENT_DATE;
+    const time = ($('#txTime') && $('#txTime').value) || '12:00';
+    const badge = amount < 0 ? 'out' : (icon === 'bank' ? 'plus' : 'in');
+    const preview = $('#txIconPreview');
+    if (preview) preview.innerHTML = R.txIcon({ name, amount, icon, badge });
+    const amt = $('#txAmtPreview');
+    if (amt) {
+      amt.textContent = D.fmtSigned(amount);
+      amt.classList.toggle('positive', amount > 0);
+    }
+    const nameEl = $('#txNamePreview');
+    if (nameEl) nameEl.textContent = name;
+    const whenEl = $('#txTimePreview');
+    if (whenEl) whenEl.textContent = D.whenLabel(date, time) + ' · Completed';
+  }
+
+  function refreshAfterTx() {
+    R.renderHome();
+    R.renderDetail();
+    R.renderEditor();
+    if (detailOpen) updateDetailHeader();
+  }
+
   function openTx(id) {
     const t = D.findTx(id);
     if (!t) return;
+    txEditingId = id;
+    txSelectedIcon = t.icon || 'initials';
     const amt = t.hideAmount ? '—' : D.fmtSigned(t.amount);
-    const whenTxt = t.date ? D.txWhen(t) : (t.time || t.note || t.alt || '');
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(String(t.date || '')) ? t.date : D.RECENT_DATE;
+    const time = /^\d{2}:\d{2}$/.test(String(t.time || t.at || '')) ? (t.time || t.at) : '12:00';
+    const whenTxt = t.date ? D.whenLabel(t.date, t.at || t.time) : (t.time || t.note || t.alt || '');
     $('#txSheetBody').innerHTML = `
       <button class="sheet-close" data-close style="position:absolute;top:12px;right:16px" aria-label="Close">×</button>
-      <div class="txs-icon">${R.txIcon(t)}</div>
-      <div class="txs-amt${t.amount > 0 ? ' positive' : ''}">${amt}</div>
-      <div class="txs-name">${D.esc(t.name)}</div>
-      <div class="txs-time">${D.esc(whenTxt)} · Completed</div>
-      <div class="txs-rows">
-        <div><span>Category</span><b>${D.esc(t.cat || 'Payment')}</b></div>
-        <div><span>Account</span><b>Personal · ${D.esc(D.CUR[D.state.currency] || D.state.currency)}</b></div>
-        <div><span>Status</span><b class="ok">Completed</b></div>
+      <div class="txs-icon" id="txIconPreview">${R.txIcon(t)}</div>
+      <div class="txs-amt${t.amount > 0 ? ' positive' : ''}" id="txAmtPreview">${amt}</div>
+      <div class="txs-name" id="txNamePreview">${D.esc(t.name)}</div>
+      <div class="txs-time" id="txTimePreview">${D.esc(whenTxt)} · Completed</div>
+      <div class="tx-edit">
+        <label class="field"><span>Name</span><input id="txName" value="${D.esc(t.name)}" autocomplete="off"></label>
+        <div class="field-grid two">
+          <label class="field"><span>Amount</span><input id="txAmount" type="number" step="0.01" inputmode="decimal" value="${Number(t.amount) || 0}"></label>
+          <label class="field"><span>Time</span><input id="txTime" type="time" value="${time}"></label>
+        </div>
+        <label class="field"><span>Date</span><input id="txDate" type="date" value="${date}"></label>
+        <label class="field"><span>Category</span><input id="txCat" value="${D.esc(t.cat || 'Payment')}" autocomplete="off"></label>
+        <div class="field-label">Icon</div>
+        <div class="icon-picker" id="txIcons">${R.iconPickerHTML(txSelectedIcon)}</div>
       </div>
-      <div class="txs-actions">
-        <button data-act="Split">Split</button>
-        <button data-act="Repeat">Repeat</button>
-        <button data-act="Receipt">Receipt</button>
+      <div class="tx-actions">
+        <button class="danger" id="txDelete">Delete</button>
+        <button class="primary" id="txSave">Save changes</button>
       </div>`;
+    $('#txSheetBody').scrollTop = 0;
     openSheet($('#txSheet'));
   }
+
+  $('#txSheetBody').addEventListener('click', (e) => {
+    const iconBtn = e.target.closest('#txIcons [data-icon]');
+    if (iconBtn) {
+      txSelectedIcon = iconBtn.dataset.icon;
+      $$('#txIcons .icon-choice').forEach((x) => x.classList.toggle('on', x === iconBtn));
+      paintTxPreview();
+      return;
+    }
+    if (e.target.closest('#txSave')) {
+      if (!txEditingId) return;
+      const amount = parseFloat($('#txAmount').value);
+      if (!isFinite(amount)) { toast('Enter an amount'); return; }
+      D.updateTx(txEditingId, {
+        name: ($('#txName').value || '').trim() || 'Payment',
+        amount,
+        icon: txSelectedIcon,
+        date: $('#txDate').value,
+        time: $('#txTime').value,
+        cat: ($('#txCat').value || '').trim() || 'Payment'
+      });
+      closeSheets();
+      refreshAfterTx();
+      toast('Transaction updated');
+      return;
+    }
+    if (e.target.closest('#txDelete')) {
+      if (!txEditingId) return;
+      D.deleteTx(txEditingId);
+      closeSheets();
+      refreshAfterTx();
+      toast('Transaction deleted');
+    }
+  });
+
+  $('#txSheetBody').addEventListener('input', (e) => {
+    const id = e.target.id;
+    if (id === 'txName' || id === 'txAmount' || id === 'txDate' || id === 'txTime') paintTxPreview();
+  });
 
   /* ============ history-only transaction ============ */
   let historyIcon = 'initials';
@@ -497,12 +576,10 @@
   });
 
   $('#addTx').addEventListener('click', () => {
-    const t = {
-      id: D.uid(), name: 'New payment', amount: -10,
-      date: D.isoDate(new Date()), at: D.nowTime(), icon: 'initials', cat: 'Payment'
-    };
-    D.state.transactions.unshift(t);
-    D.save();
+    const t = D.addTransaction({
+      name: 'New payment', amount: -10,
+      date: D.isoDate(new Date()), time: D.nowTime(), icon: 'initials', cat: 'Payment'
+    });
     R.renderEditor();
     R.renderHome();
     R.renderDetail();
@@ -528,15 +605,13 @@
     const picked = $('#hDate').value;
     const date = /^\d{4}-\d{2}-\d{2}$/.test(picked) ? picked : D.isoDate(new Date());
     if (!amount) { toast('Enter an amount'); return; }
-    D.state.historyExtra = D.state.historyExtra || [];
-    D.state.historyExtra.push({
-      id: D.uid(), date, name, amount, time,
-      icon: historyIcon, badge: amount < 0 ? 'out' : 'in', cat: 'Payment'
+    D.addTransaction({
+      name, amount, date, time, icon: historyIcon, cat: 'Payment'
     });
-    D.save();
     refreshDetail();
+    R.renderHome();
     closeSheets();
-    toast('Added to ' + D.groupLabel(date));
+    toast('Transaction added');
     setTimeout(() => {
       const el = document.querySelector(`#detailBody .dgroup[data-date="${date}"]`);
       if (!el) return;

@@ -40,8 +40,8 @@ It opens full-screen with no browser chrome, works offline after the first load,
 - Today / Yesterday groups with computed totals, merged with the home payments by date.
 - Day totals are always neutral grey; individual incoming amounts stay green.
 - Date labels are computed from each group's date, so "Today" / "Yesterday" stay correct.
-- Tap the **+** button in the header to add a transaction on any custom date and pick its icon. A new day group is created automatically. History-only entries never appear on the home card and don't change the current balance.
-- Tap any row for a transaction detail sheet (category, account, status, actions).
+- Tap the **+** button in the header to add a transaction on any custom date and pick its icon. New transactions appear at the top of the home recent list and in the matching day group; they don't change the current balance.
+- Tap any row — on the home card or in the full list — to edit its name, amount, date, time, category and icon, or delete it. Changes save instantly and update both screens.
 
 **Customisable numbers** (tap the avatar, the balance, or `More`; or press `E`)
 - Initials, currency (lei / € / $ / £), balance, IBAN.
@@ -58,9 +58,10 @@ It opens full-screen with no browser chrome, works offline after the first load,
 1. Start on the home screen; let the balance count up and the promo carousel turn.
 2. Scroll a little: the hero collapses, the top bar darkens, the transaction card comes up.
 3. Tap `See all` for the black transaction list; search `profi`; tap a row.
-4. Go back, tap the avatar (or the balance) and change the balance / a transaction amount live.
-5. Tap `Add money`, add 250, and watch the hero animate.
-6. `Reset demo` before the next run.
+4. Tap any payment to edit its name, amount, date, time and icon, or delete it.
+5. Go back, tap the avatar (or the balance) and change the balance live.
+6. Tap `Add money`, add 250, and watch the hero animate.
+7. `Reset demo` before the next run.
 
 Keyboard: `E` opens the editor, `Esc` closes sheets/screens.
 

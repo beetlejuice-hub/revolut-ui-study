@@ -1,5 +1,5 @@
 /* Offline cache for the Revolut UI study. Bump CACHE when assets change. */
-const CACHE = 'revolut-study-v12';
+const CACHE = 'revolut-study-v13';
 
 const ASSETS = [
   './',

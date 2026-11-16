@@ -25,7 +25,11 @@
     ],
     /* Extra rows that belong only to the older spending-history days.
        They never appear on the home card. */
-    historyExtra: []
+    historyExtra: [],
+    /* Overrides and removals for the reference rows baked into HISTORY.
+       Editing a history row never mutates the shared template. */
+    historyEdits: {},
+    historyDeleted: []
   };
 
   /* Full spending history from the reference screenshots. The most recent
@@ -308,6 +312,12 @@
       merged.historyExtra = Array.isArray(merged.historyExtra)
         ? merged.historyExtra.map(normalizeHistoryExtra).filter(Boolean)
         : [];
+      merged.historyEdits = merged.historyEdits && typeof merged.historyEdits === 'object' && !Array.isArray(merged.historyEdits)
+        ? merged.historyEdits
+        : {};
+      merged.historyDeleted = Array.isArray(merged.historyDeleted)
+        ? merged.historyDeleted.map(String)
+        : [];
       return merged;
     } catch (e) {
       return clone(DEFAULTS);
@@ -442,8 +452,13 @@
     }
 
     HISTORY.forEach((g) => {
-      const group = groupFor(g.date);
-      g.rows.forEach((r) => group.rows.push(Object.assign({}, r)));
+      g.rows.forEach((r) => {
+        if (state.historyDeleted.indexOf(r.id) !== -1) return;
+        const edit = state.historyEdits[r.id] || {};
+        const date = /^\d{4}-\d{2}-\d{2}$/.test(String(edit.date || '')) ? edit.date : g.date;
+        const group = groupFor(date);
+        group.rows.push(Object.assign({}, r, edit, { date }));
+      });
     });
 
     state.transactions.forEach((t) => {
@@ -464,22 +479,120 @@
     return groups.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
   }
 
-  function findTx(id) {
+  /* Where a transaction lives: the editable home rows, a custom history row,
+     or one of the reference rows baked into HISTORY. */
+  function txRef(id) {
     const own = state.transactions.find((x) => x.id === id);
-    if (own) return own;
+    if (own) return { store: 'home', tx: own };
     const extra = (state.historyExtra || []).find((x) => x.id === id);
-    if (extra) return extra;
+    if (extra) return { store: 'extra', tx: extra };
     for (const g of HISTORY) {
       const hit = g.rows.find((x) => x.id === id);
-      if (hit) return hit;
+      if (hit) return { store: 'static', tx: hit, date: g.date };
     }
     return null;
+  }
+
+  /* The effective, display-ready transaction. Reference rows are merged with
+     their saved override so editing never mutates the shared template. */
+  function findTx(id) {
+    const ref = txRef(id);
+    if (!ref) return null;
+    if (ref.store === 'static') {
+      const edit = state.historyEdits[id] || {};
+      return Object.assign({}, ref.tx, { date: edit.date || ref.date, time: edit.time || ref.tx.time }, edit);
+    }
+    return Object.assign({}, ref.tx);
+  }
+
+  /* Update any transaction, whichever store it came from. */
+  function updateTx(id, patch) {
+    const ref = txRef(id);
+    if (!ref) return null;
+    const p = patch || {};
+    const clean = {};
+    if (p.name !== undefined) clean.name = String(p.name || 'Payment').slice(0, 80);
+    if (p.amount !== undefined) {
+      const n = Number(p.amount);
+      clean.amount = isFinite(n) ? Math.round(n * 100) / 100 : 0;
+      if (clean.amount !== Number(ref.tx.amount)) {
+        clean.alt = '';
+        if (ref.tx.hideAmount) clean.hideAmount = false;
+      }
+    }
+    if (p.icon !== undefined) clean.icon = String(p.icon || 'initials');
+    if (p.cat !== undefined) clean.cat = String(p.cat || 'Payment').slice(0, 40);
+    if (p.note !== undefined) clean.note = String(p.note || '').slice(0, 80);
+    if (p.date !== undefined) {
+      clean.date = /^\d{4}-\d{2}-\d{2}$/.test(String(p.date)) ? String(p.date) : (ref.tx.date || ref.date || RECENT_DATE);
+    }
+    if (p.time !== undefined) {
+      clean.time = /^\d{2}:\d{2}$/.test(String(p.time)) ? String(p.time) : '12:00';
+    }
+    if (p.amount !== undefined || p.icon !== undefined) {
+      const amount = clean.amount !== undefined ? clean.amount : Number(ref.tx.amount) || 0;
+      const icon = clean.icon !== undefined ? clean.icon : ref.tx.icon;
+      clean.badge = amount < 0 ? 'out' : (icon === 'bank' ? 'plus' : 'in');
+    }
+
+    if (ref.store === 'home') {
+      Object.assign(ref.tx, clean);
+      if (clean.date) ref.tx.date = clean.date;
+      if (clean.time) ref.tx.at = clean.time;
+      delete ref.tx.time;
+    } else if (ref.store === 'extra') {
+      Object.assign(ref.tx, clean);
+    } else {
+      const cur = state.historyEdits[id] || {};
+      state.historyEdits[id] = Object.assign({}, cur, clean, {
+        date: clean.date || cur.date || ref.date,
+        time: clean.time || cur.time || ref.tx.time
+      });
+    }
+    save();
+    return findTx(id);
+  }
+
+  /* Remove any transaction, whichever store it came from. */
+  function deleteTx(id) {
+    const ref = txRef(id);
+    if (!ref) return false;
+    if (ref.store === 'home') {
+      state.transactions = state.transactions.filter((x) => x.id !== id);
+    } else if (ref.store === 'extra') {
+      state.historyExtra = (state.historyExtra || []).filter((x) => x.id !== id);
+    } else {
+      if (state.historyDeleted.indexOf(id) === -1) state.historyDeleted.push(id);
+      delete state.historyEdits[id];
+    }
+    save();
+    return true;
+  }
+
+  /* Add a new payment. It joins the home recent list and the spending history. */
+  function addTransaction(t) {
+    const src = t || {};
+    const amount = Math.round((Number(src.amount) || 0) * 100) / 100;
+    const row = {
+      id: src.id || uid(),
+      name: String(src.name || 'Payment').slice(0, 80),
+      amount,
+      date: /^\d{4}-\d{2}-\d{2}$/.test(String(src.date || '')) ? String(src.date) : isoDate(new Date()),
+      at: /^\d{2}:\d{2}$/.test(String(src.time || '')) ? String(src.time) : nowTime(),
+      icon: src.icon || 'initials',
+      badge: amount < 0 ? 'out' : (src.icon === 'bank' ? 'plus' : 'in'),
+      cat: src.cat || 'Payment'
+    };
+    if (src.note) row.note = String(src.note).slice(0, 80);
+    state.transactions.unshift(row);
+    save();
+    return row;
   }
 
   window.DEMO = {
     KEY, DEFAULTS, HISTORY, MONTHS, CARDS, WEALTH, SPENT, PROMOS, CUR, ICON_CHOICES, state, save, reset,
     RECENT_DATE, moneyParts, fmt, fmtSigned, initialsOf, uid, shortTime, sum, esc, clone,
     isoDate, whenLabel, groupLabel, txWhen, nowTime,
-    historyGroups, findTx
+    historyGroups, findTx, txRef, updateTx, deleteTx, addTransaction
   };
 })();

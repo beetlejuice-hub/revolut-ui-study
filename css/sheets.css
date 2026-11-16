@@ -114,6 +114,8 @@
 .icon-choice.on{border-color:#4d5dff;background:#22222a}
 .icon-choice .ic{width:34px;height:34px;font-size:11px}
 .icon-choice .ic-logo img{transform:scale(.96)}
+.icon-choice .ic-logo.lg-bank{width:30px;height:19px;border-radius:3px}
+.icon-choice .ic-logo.lg-bank img{transform:none;border-radius:3px}
 
 .tx-editor{display:flex;flex-direction:column;gap:8px}
 .edit-row{
