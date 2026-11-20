@@ -14,7 +14,7 @@
      trademarks belong to their owners. */
   const LOGOS = {
     lidl: { src: 'img/logos/lidl-crop.png', cls: 'lg-lidl' },
-    kaufland: { src: 'img/logos/kaufland-google.png', cls: 'lg-kaufland' },
+    kaufland: { src: 'img/logos/kaufland-crop.png', cls: 'lg-kaufland' },
     claude: { src: 'img/logos/claude-crop.png', cls: 'lg-claude' },
     anthropic: { src: 'img/logos/anthropic-google.png', cls: 'lg-anthropic' },
     netflix: { src: 'img/logos/netflix-google.png', cls: 'lg-netflix' },
@@ -28,6 +28,8 @@
     sazy: { src: 'img/logos/sazy.png', cls: 'lg-sazy' },
     tabac: { src: 'img/logos/tabac.png', cls: 'lg-tabac' },
     woodland: { src: 'img/logos/woodland.png', cls: 'lg-woodland' },
+    kfc: { src: 'img/logos/kfc-crop.png', cls: 'lg-kfc' },
+    malna: { src: 'img/logos/malna-crop.png', cls: 'lg-malna' },
     bank: { src: 'img/logos/bank-card.png', cls: 'lg-bank' }
   };
 
@@ -53,9 +55,9 @@
     } else if (key === 'dining') {
       cls += ' ic-dining';
       inner = S.fork;
-    } else if (key === 'malna') {
-      cls += ' ic-malna';
-      inner = S.malna;
+    } else if (key === 'tbf') {
+      cls += ' ic-tbf';
+      inner = S.shopBasket;
     } else if (key === 'apple') {
       cls += ' ic-apple';
       inner = S.apple;
@@ -79,7 +81,7 @@
   /* ---------- balance ---------- */
   function balanceHTML(n) {
     const p = D.moneyParts(n);
-    return `<span class="int">${p.neg ? '-' : ''}${p.int}</span><span class="dec">,${p.dec}</span><span class="cur">${D.state.currency}</span>`;
+    return `<span class="int">${p.neg ? '-' : ''}${p.int}</span>${p.dec === '00' ? '' : `<span class="dec">,${p.dec}</span>`}<span class="cur">${D.state.currency}</span>`;
   }
 
   function paintDetailBalance(n) {
@@ -131,7 +133,9 @@
 
   /* ---------- home ---------- */
   function homeRow(t) {
-    const amt = t.amount > 0 ? D.fmtSigned(t.amount) : D.fmt(t.amount);
+    const amt = t.hideAmount
+      ? '—'
+      : (t.amount > 0 ? D.fmtSigned(t.amount) : D.fmt(t.amount));
     return `<button class="trow" data-tx="${t.id}">
       ${txIcon(t)}
       <span class="tmain">
@@ -155,12 +159,18 @@
 
     const list = $('#txList');
     if (list) {
-      const recent = s.transactions.slice().sort((a, b) => {
-        const byDate = String(b.date || '').localeCompare(String(a.date || ''));
-        if (byDate) return byDate;
-        return String(b.at || '').localeCompare(String(a.at || ''));
+      /* The home card mirrors the newest rows from the full history, so an
+         added, edited or moved transaction immediately lands in the right
+         spot and a deletion promotes the next most recent payment. */
+      const recent = [];
+      D.historyGroups().some((g) => {
+        g.rows.some((r) => {
+          recent.push(r);
+          return recent.length >= 3;
+        });
+        return recent.length >= 3;
       });
-      list.innerHTML = recent.slice(0, 3).map(homeRow).join('');
+      list.innerHTML = recent.map(homeRow).join('');
     }
 
     renderCards();
@@ -253,9 +263,11 @@
 
   /* ---------- history ---------- */
   function detailRow(t) {
-    const sub = t.note
-      ? t.note + (t.time ? ' · ' + t.time : '')
-      : D.shortTime(t.time);
+    const timeTxt = D.shortTime(t.time);
+    const sub = t.sub2
+      ? esc(timeTxt)
+      : esc(t.note ? t.note + (t.time ? ' · ' + timeTxt : '') : timeTxt);
+    const sub2 = t.sub2 ? `<span class="dsub2">${esc(t.sub2)}</span>` : '';
     const alt = t.alt ? `<span class="amt-alt">${esc(t.alt)}</span>` : '';
     const amt = t.hideAmount
       ? '<span class="damt muted">—</span>'
@@ -264,7 +276,7 @@
       ${txIcon(t)}
       <span class="dmain">
         <span class="dname">${esc(t.name)}</span>
-        <span class="dsub">${esc(sub)}</span>
+        <span class="dsub">${sub}</span>${sub2}
       </span>
       ${amt}
     </button>`;

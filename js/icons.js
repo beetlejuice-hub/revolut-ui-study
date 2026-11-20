@@ -30,6 +30,13 @@ window.SVGI = {
 
   basket: `<svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M22 9h-4.8l-3.1-4.6a1 1 0 0 0-1.4-.3l-1.2.8 2.6 4.1H4a2 2 0 0 0-2 2l1 8a2 2 0 0 0 2 1.7h14a2 2 0 0 0 2-1.7l1-8a2 2 0 0 0-2-2zm-10 9.5a1.9 1.9 0 1 1 0-3.8 1.9 1.9 0 0 1 0 3.8z"/></svg>`,
 
+  /* shopping basket used by Tbf Sweet Build */
+  shopBasket: `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+    <path d="M4.3 9.4h15.4l-1.2 8.4a2.4 2.4 0 0 1-2.4 2.1H7.9a2.4 2.4 0 0 1-2.4-2.1L4.3 9.4z" fill="currentColor"/>
+    <path d="M8.6 9.2 11 4.7M15.4 9.2 13 4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M9.3 12.3v3.5M12 12.3v3.5M14.7 12.3v3.5" fill="none" stroke="#48c21f" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`,
+
   /* ---------- merchant marks that are not brand assets ---------- */
   malna: `<svg viewBox="0 0 30 34" width="26" height="30" aria-hidden="true">
     <text x="15" y="6.2" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="4.4" font-style="italic" fill="#c2185b">MÁLNA</text>

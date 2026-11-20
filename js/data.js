@@ -2,26 +2,28 @@
 (function () {
   const KEY = 'revolut-ui-study-v2';
 
-  /* The reference screenshots now cover 13–16 November 2026, so the three
+  /* The reference screenshots now cover 15–20 November 2026, so the three
      editable home payments are the latest rows from the newest screenshot.
      Their labels are computed against the real current date, so "Today" and
      "Yesterday" stay correct. */
-  const RECENT_DATE = '2026-11-16';
+  const RECENT_DATE = '2026-11-20';
+  const SEED = 3;
   const MONTH_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const DEFAULTS = {
     name: 'Arnold',
     initials: 'AL',
-    balance: 103.58,
+    balance: 371.63,
     currency: 'lei',
     iban: 'RO09 REVO 0000 1112 7043 6279',
+    seed: SEED,
     /* The three most recent payments — shown on the home card and at the
        top of the history. Editable in the demo sheet. */
     transactions: [
-      { id: 't1', name: 'Kedves Csenge 💕', amount: -27, date: '2026-11-16', at: '17:09', icon: 'initials', badge: 'out', cat: 'Transfer' },
-      { id: 't2', name: 'Money added via ··6426', amount: 120, date: '2026-11-16', at: '17:03', icon: 'bank', badge: 'plus', cat: 'Top-up' },
-      { id: 't3', name: 'Kedves Csenge 💕', amount: -10, date: '2026-11-15', at: '07:55', icon: 'initials', badge: 'out', cat: 'Transfer' }
+      { id: 'n20-1', name: 'Tbf Sweet Build', amount: -20, date: '2026-11-20', at: '15:18', icon: 'tbf', cat: 'Groceries' },
+      { id: 'n20-2', name: 'Anthropic', amount: -117.28, date: '2026-11-20', at: '08:28', alt: '-21,78 €', icon: 'anthropic', cat: 'AI subscription' },
+      { id: 'n20-3', name: 'Petrom', amount: -25, date: '2026-11-20', at: '01:00', icon: 'petrom', cat: 'Fuel' }
     ],
     /* Extra rows that belong only to the older spending-history days.
        They never appear on the home card. */
@@ -36,6 +38,42 @@
      group is merged in from state.transactions at render time. Every group
      carries an ISO date so the "Today" / "Yesterday" labels stay correct. */
   const HISTORY = [
+    {
+      key: 'nov19', label: 'November 19.', date: '2026-11-19', month: '2026-11',
+      rows: [
+        { id: 'h-kaufland-3', name: 'Kaufland', amount: -11.39, time: '15:39', icon: 'kaufland', cat: 'Groceries' },
+        { id: 'h-lidl-4', name: 'Lidl', amount: -3.55, time: '15:32', icon: 'lidl', cat: 'Groceries' }
+      ]
+    },
+    {
+      key: 'nov18', label: 'November 18.', date: '2026-11-18', month: '2026-11',
+      rows: [
+        { id: 'h-lidl-5', name: 'Lidl', amount: -36.13, time: '19:57', icon: 'lidl', cat: 'Groceries' },
+        { id: 'h-kfc', name: 'Kfc', amount: -48.80, time: '18:42', icon: 'kfc', cat: 'Dining' },
+        { id: 'h-malna-2', name: 'Málna by Lengyel László Levente', amount: -38, time: '16:42', icon: 'malna', cat: 'Dining' }
+      ]
+    },
+    {
+      key: 'nov17', label: 'November 17.', date: '2026-11-17', month: '2026-11',
+      rows: [
+        { id: 'h-lidl-6', name: 'Lidl', amount: -31.80, time: '13:20', icon: 'lidl', cat: 'Groceries' },
+        { id: 'h-lukacs', name: 'Lukacs Arnold', amount: -1500, time: '12:54', sub2: 'Sent from Revolut', icon: 'initials', badge: 'out', cat: 'Transfer' }
+      ]
+    },
+    {
+      key: 'nov16', label: 'November 16.', date: '2026-11-16', month: '2026-11',
+      rows: [
+        { id: 'h-anyu-4', name: 'Anyu', amount: 2500, time: '21:20', icon: 'initials', badge: 'in', cat: 'Transfer' },
+        { id: 'h-csenge-6', name: 'Kedves Csenge 💕', amount: -27, time: '17:09', icon: 'initials', badge: 'out', cat: 'Transfer' },
+        { id: 'h-topup', name: 'Money added via ··6426', amount: 120, time: '17:03', icon: 'bank', badge: 'plus', cat: 'Top-up' }
+      ]
+    },
+    {
+      key: 'nov15', label: 'November 15.', date: '2026-11-15', month: '2026-11',
+      rows: [
+        { id: 'h-csenge-7', name: 'Kedves Csenge 💕', amount: -10, time: '07:55', icon: 'initials', badge: 'out', cat: 'Transfer' }
+      ]
+    },
     {
       key: 'nov14', label: 'November 14.', date: '2026-11-14', month: '2026-11',
       rows: [
@@ -227,6 +265,8 @@
     { key: 'eventum', label: 'Eventum Box' },
     { key: 'mag', label: 'Mag' },
     { key: 'anthropic', label: 'Anthropic' },
+    { key: 'tbf', label: 'Tbf Sweet Build' },
+    { key: 'kfc', label: 'KFC' },
     { key: 'dining', label: 'Dining' },
     { key: 'malna', label: 'Málna' },
     { key: 'aircash', label: 'Aircash' },
@@ -271,13 +311,34 @@
     { id: 't3', name: 'Petrom', amount: -201.27, date: '2026-11-12', at: '17:22' }
   ];
 
-  function isPrevHome(list) {
-    if (!Array.isArray(list) || list.length !== PREV_HOME.length) return false;
+  /* The three rows shipped just before the 20 November screenshot. They now
+     live in the static November 16 history group. */
+  const PREV_HOME_2 = [
+    { id: 't1', name: 'Kedves Csenge 💕', amount: -27, date: '2026-11-16', at: '17:09' },
+    { id: 't2', name: 'Money added via ··6426', amount: 120, date: '2026-11-16', at: '17:03' },
+    { id: 't3', name: 'Kedves Csenge 💕', amount: -10, date: '2026-11-15', at: '07:55' }
+  ];
+
+  function matchesHomeSet(list, set) {
+    if (!Array.isArray(list) || list.length !== set.length) return false;
     return list.every((t, i) => {
-      const p = PREV_HOME[i];
+      const p = set[i];
       return t && t.id === p.id && String(t.name || '') === p.name &&
         Number(t.amount) === p.amount && String(t.date || '') === p.date && String(t.at || '') === p.at;
     });
+  }
+
+  function isPrevHome(list) {
+    return matchesHomeSet(list, PREV_HOME) || matchesHomeSet(list, PREV_HOME_2);
+  }
+
+  /* Rows that used to be demo defaults but now live in the static history. */
+  function isOldDemoRow(t) {
+    if (!t) return false;
+    return PREV_HOME.concat(PREV_HOME_2).some((p) =>
+      t.id === p.id && String(t.name || '') === p.name &&
+      Number(t.amount) === p.amount && String(t.date || '') === p.date &&
+      String(t.at || '') === p.at);
   }
 
   function load() {
@@ -292,6 +353,25 @@
       const staleHome = isLegacyHome(merged.transactions) || isPrevHome(merged.transactions);
       if (!Array.isArray(merged.transactions)) merged.transactions = base.transactions;
       else if (staleHome) merged.transactions = clone(base.transactions);
+
+      /* One-time seed for browsers that saved the older demo data. Exact old
+         demo rows move into the static history, and the new latest payments
+         are added without touching any custom rows the user created. */
+      if (parsed.seed !== SEED) {
+        if (!staleHome && Array.isArray(merged.transactions)) {
+          merged.transactions = merged.transactions.filter((t) => !isOldDemoRow(t));
+          base.transactions.forEach((t) => {
+            const exists = merged.transactions.some((x) => x && (x.id === t.id ||
+              (String(x.name) === t.name && String(x.date) === t.date &&
+               String(x.at || '') === t.at && Number(x.amount) === t.amount)));
+            if (!exists) merged.transactions.push(clone(t));
+          });
+        }
+        if (Number(merged.balance) === 72.83 || Number(merged.balance) === 103.58) {
+          merged.balance = base.balance;
+        }
+        merged.seed = SEED;
+      }
       if (staleHome && Number(merged.balance) === 72.83) merged.balance = base.balance;
       delete merged.upcoming;
       merged.name = String(merged.name || base.name);
@@ -318,6 +398,9 @@
       merged.historyDeleted = Array.isArray(merged.historyDeleted)
         ? merged.historyDeleted.map(String)
         : [];
+      if (parsed.seed !== SEED) {
+        try { localStorage.setItem(KEY, JSON.stringify(merged)); } catch (e) {}
+      }
       return merged;
     } catch (e) {
       return clone(DEFAULTS);
@@ -343,20 +426,20 @@
     const [i, d] = Math.abs(num).toFixed(2).split('.');
     return {
       neg,
-      int: i.replace(/\B(?=(\d{3})+(?!\d))/g, '.'),
+      int: i.replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0'),
       dec: d
     };
   }
 
   function fmt(n) {
     const p = moneyParts(n);
-    return (p.neg ? '-' : '') + p.int + ',' + p.dec + ' ' + state.currency;
+    return (p.neg ? '-' : '') + p.int + (p.dec === '00' ? '' : ',' + p.dec) + ' ' + state.currency;
   }
 
   function fmtSigned(n) {
     const p = moneyParts(n);
     const sign = p.neg ? '-' : (Number(n) > 0 ? '+' : '');
-    return sign + p.int + ',' + p.dec + ' ' + state.currency;
+    return sign + p.int + (p.dec === '00' ? '' : ',' + p.dec) + ' ' + state.currency;
   }
 
   function initialsOf(name) {
@@ -418,7 +501,7 @@
   }
 
   function txWhen(t) {
-    if (t && t.date) return whenLabel(t.date, t.at);
+    if (t && t.date) return whenLabel(t.date, t.at || shortTime(t.time));
     return (t && t.time) || '';
   }
 

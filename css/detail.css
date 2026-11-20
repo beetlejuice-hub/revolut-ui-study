@@ -249,7 +249,7 @@
 /* bank-card mark in the large preview */
 .txs-icon .ic-logo.lg-bank{width:100px;height:63px;border-radius:8px}
 .txs-icon .ic-logo.lg-bank img{transform:none;border-radius:8px}
-.txs-icon .ic-logo.lg-bank .badge-plus{width:24px;height:24px;right:-4px;bottom:-15px}
+.txs-icon .ic-logo.lg-bank .badge-plus{width:24px;height:24px;left:-4px;right:auto;bottom:-15px}
 .txs-icon .ic-logo.lg-bank .badge-plus svg{width:13px;height:13px}
 
 /* inline transaction editor */

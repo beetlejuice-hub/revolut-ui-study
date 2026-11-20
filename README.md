@@ -40,7 +40,7 @@ It opens full-screen with no browser chrome, works offline after the first load,
 - Today / Yesterday groups with computed totals, merged with the home payments by date.
 - Day totals are always neutral grey; individual incoming amounts stay green.
 - Date labels are computed from each group's date, so "Today" / "Yesterday" stay correct.
-- Tap the **+** button in the header to add a transaction on any custom date and pick its icon. New transactions appear at the top of the home recent list and in the matching day group; they don't change the current balance.
+- Tap the **+** button in the header to add a transaction on any custom date and pick its icon. New transactions appear in the correct position in the home recent list (sorted by date, then time) and in the matching day group; they don't change the current balance.
 - Tap any row — on the home card or in the full list — to edit its name, amount, date, time, category and icon, or delete it. Changes save instantly and update both screens.
 
 **Customisable numbers** (tap the avatar, the balance, or `More`; or press `E`)
