@@ -39,6 +39,13 @@
      carries an ISO date so the "Today" / "Yesterday" labels stay correct. */
   const HISTORY = [
     {
+      key: 'nov25', label: 'November 25.', date: '2026-11-25', month: '2026-11',
+      rows: [
+        { id: 'h-kie-1', name: 'kie.ai', amount: -49.08, time: '15:42', alt: '-10 $', icon: 'kie', cat: 'AI subscription' },
+        { id: 'h-apple-3', name: 'Apple', amount: -35.99, time: '14:32', icon: 'apple', cat: 'Subscription' }
+      ]
+    },
+    {
       key: 'nov19', label: 'November 19.', date: '2026-11-19', month: '2026-11',
       rows: [
         { id: 'h-kaufland-3', name: 'Kaufland', amount: -11.39, time: '15:39', icon: 'kaufland', cat: 'Groceries' },
@@ -265,6 +272,7 @@
     { key: 'eventum', label: 'Eventum Box' },
     { key: 'mag', label: 'Mag' },
     { key: 'anthropic', label: 'Anthropic' },
+    { key: 'kie', label: 'kie.ai' },
     { key: 'tbf', label: 'Tbf Sweet Build' },
     { key: 'kfc', label: 'KFC' },
     { key: 'dining', label: 'Dining' },

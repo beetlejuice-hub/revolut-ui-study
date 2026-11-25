@@ -1,5 +1,5 @@
 /* Offline cache for the Revolut UI study. Bump CACHE when assets change. */
-const CACHE = 'revolut-study-v16';
+const CACHE = 'revolut-study-v17';
 
 const ASSETS = [
   './',
@@ -32,6 +32,7 @@ const ASSETS = [
   './img/logos/woodland.png',
   './img/logos/kfc-crop.png',
   './img/logos/malna-crop.png',
+  './img/logos/kie-crop.png',
   './img/logos/bank-card.png',
   './fonts/inter-latin.woff2',
   './fonts/inter-latin-ext.woff2',

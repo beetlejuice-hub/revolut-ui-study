@@ -28,6 +28,7 @@
     sazy: { src: 'img/logos/sazy.png', cls: 'lg-sazy' },
     tabac: { src: 'img/logos/tabac.png', cls: 'lg-tabac' },
     woodland: { src: 'img/logos/woodland.png', cls: 'lg-woodland' },
+    kie: { src: 'img/logos/kie-crop.png', cls: 'lg-kie' },
     kfc: { src: 'img/logos/kfc-crop.png', cls: 'lg-kfc' },
     malna: { src: 'img/logos/malna-crop.png', cls: 'lg-malna' },
     bank: { src: 'img/logos/bank-card.png', cls: 'lg-bank' }
